@@ -43,7 +43,7 @@
     ],
     "extraFiles": [
       {
-        "from": "../build/ChimixCheatEngine.exe",
+        "from": "build/ChimixCheatEngine.exe",
         "to": "engine/ChimixCheatEngine.exe"
       }
     ],
