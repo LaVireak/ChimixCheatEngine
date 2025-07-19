@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChimixCheatEngine - Memory Scanner</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app">
+        <!-- Title Bar (Custom for desktop app) -->
+        <div class="title-bar">
+            <div class="title-bar-content">
+                <div class="title-info">
+                    <i class="fas fa-brain"></i>
+                    <span id="appTitle">ChimixCheatEngine</span>
+                    <span id="appVersion" class="version-badge">v1.0.0</span>
+                </div>
+                <div class="title-status">
+                    <span id="engineStatus" class="status-indicator">
+                        <i class="fas fa-circle"></i>
+                        <span>Ready</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-cogs"></i> Process Manager</h3>
+                    <div class="process-controls">
+                        <div class="input-group">
+                            <input type="text" id="processInput" placeholder="Enter process name (e.g., notepad.exe)" class="input-field">
+                            <button id="selectProcess" class="btn btn-icon" title="Select from running processes">
+                                <i class="fas fa-list"></i>
+                            </button>
+                            <button id="refreshProcesses" class="btn btn-icon" title="Refresh Process List">
+                                <i class="fas fa-sync"></i>
+                            </button>
+                        </div>
+                        <button id="attachBtn" class="btn btn-primary">
+                            <i class="fas fa-link"></i> Attach to Process
+                        </button>
+                    </div>
+                    <div id="currentProcess" class="current-process">
+                        <div class="no-process">
+                            <i class="fas fa-unlink"></i>
+                            <span>No process attached</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-search"></i> Memory Scanner</h3>
+                    <div class="scan-controls">
+                        <div class="form-group">
+                            <label for="scanValue">Value to Scan:</label>
+                            <input type="text" id="scanValue" placeholder="Enter any value (number, text, etc.)" class="input-field">
+                            <div class="input-hint">
+                                <i class="fas fa-info-circle"></i>
+                                Universal scan - automatically detects data types
+                            </div>
+                        </div>
+                        <button id="scanBtn" class="btn btn-success">
+                            <i class="fas fa-search"></i> Start Scan
+                        </button>
+                        <button id="nextScanBtn" class="btn btn-secondary" disabled>
+                            <i class="fas fa-arrow-right"></i> Next Scan
+                        </button>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-chart-line"></i> Statistics</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-icon">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <div class="stat-details">
+                                <span class="stat-label">Found</span>
+                                <span id="scanCount" class="stat-value">0</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon">
+                                <i class="fas fa-edit"></i>
+                            </div>
+                            <div class="stat-details">
+                                <span class="stat-label">Modified</span>
+                                <span id="modifiedCount" class="stat-value">0</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon">
+                                <i class="fas fa-memory"></i>
+                            </div>
+                            <div class="stat-details">
+                                <span class="stat-label">Memory</span>
+                                <span id="memoryUsage" class="stat-value">0 MB</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-details">
+                                <span class="stat-label">Uptime</span>
+                                <span id="uptime" class="stat-value">00:00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Panel -->
+            <main class="main-panel">
+                <div class="panel-header">
+                    <h2><i class="fas fa-memory"></i> Memory Results</h2>
+                    <div class="panel-actions">
+                        <button id="filterResults" class="btn btn-outline">
+                            <i class="fas fa-filter"></i> Filter
+                        </button>
+                        <button id="clearResults" class="btn btn-outline">
+                            <i class="fas fa-trash"></i> Clear
+                        </button>
+                        <button id="exportResults" class="btn btn-outline">
+                            <i class="fas fa-download"></i> Export
+                        </button>
+                    </div>
+                </div>
+
+                <div class="results-container">
+                    <div id="loadingSpinner" class="loading-spinner hidden">
+                        <div class="spinner">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                        <span>Scanning memory...</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                    </div>
+
+                    <div id="noResults" class="no-results">
+                        <div class="no-results-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h3>No scan results yet</h3>
+                        <p>Attach to a process and perform a memory scan to see results here.</p>
+                        <div class="quick-actions">
+                            <button class="btn btn-primary" onclick="focusProcessInput()">
+                                <i class="fas fa-plus"></i> Attach Process
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="resultsTable" class="results-table hidden">
+                        <div class="table-header">
+                            <div class="table-info">
+                                <span id="resultsCount">0 results</span>
+                                <span id="resultsTime"></span>
+                            </div>
+                            <div class="table-actions">
+                                <button id="selectAll" class="btn btn-small">Select All</button>
+                                <button id="deselectAll" class="btn btn-small">Deselect All</button>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th><input type="checkbox" id="selectAllCheckbox"></th>
+                                        <th>Address</th>
+                                        <th>Value</th>
+                                        <th>Type</th>
+                                        <th>Previous</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="resultsBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-left">
+                <span id="connectionStatus" class="status-item">
+                    <i class="fas fa-wifi"></i>
+                    <span>Connected</span>
+                </span>
+                <span id="processStatus" class="status-item">
+                    <i class="fas fa-desktop"></i>
+                    <span>No process</span>
+                </span>
+            </div>
+            <div class="status-right">
+                <span id="scanStatus" class="status-item">Ready</span>
+                <span class="status-item">|</span>
+                <span class="status-item">ChimixCheatEngine</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="modifyModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-edit"></i> Modify Memory Value</h3>
+                <button class="modal-close" onclick="closeModal('modifyModal')" title="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Address:</label>
+                    <input type="text" id="modifyAddress" class="input-field" readonly title="Memory address">
+                </div>
+                <div class="form-group">
+                    <label>Type:</label>
+                    <input type="text" id="modifyType" class="input-field" readonly title="Value type">
+                </div>
+                <div class="form-group">
+                    <label>Current Value:</label>
+                    <input type="text" id="currentValue" class="input-field" readonly title="Current value">
+                </div>
+                <div class="form-group">
+                    <label>New Value:</label>
+                    <input type="text" id="newValue" class="input-field" placeholder="Enter new value" title="New value to set">
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="freezeValue"> Freeze this value
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('modifyModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="confirmModify()">
+                    <i class="fas fa-save"></i> Apply Changes
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Process Selection Modal -->
+    <div id="processSelectionModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3><i class="fas fa-desktop"></i> Select Process</h3>
+                <button class="modal-close" onclick="closeModal('processSelectionModal')" title="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Search processes:</label>
+                    <input type="text" id="processSearch" class="input-field" placeholder="Type to filter processes..." title="Search processes">
+                </div>
+                <div class="process-list-container">
+                    <div id="loadingProcesses" class="loading-spinner hidden">
+                        <div class="spinner">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                        <span>Loading processes...</span>
+                    </div>
+                    <div id="processListContainer" class="process-list">
+                        <!-- Process list will be populated here -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="openSelectedProcess" onclick="attachToSelectedProcess()">
+                    <i class="fas fa-folder-open"></i> Open
+                </button>
+                <button class="btn btn-secondary" onclick="closeModal('processSelectionModal')">Cancel</button>
+                <button class="btn btn-secondary" onclick="refreshProcessList()">
+                    <i class="fas fa-sync"></i> Refresh
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-cogs"></i> Settings</h3>
+                <button class="modal-close" onclick="closeModal('settingsModal')" title="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-tabs">
+                    <button class="tab-button active" onclick="showTab('general')">General</button>
+                    <button class="tab-button" onclick="showTab('scanning')">Scanning</button>
+                    <button class="tab-button" onclick="showTab('appearance')">Appearance</button>
+                </div>
+                <div class="settings-content">
+                    <div id="generalTab" class="tab-content active">
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="autoSave"> Auto-save results
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="confirmModify"> Confirm memory modifications
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="showWarnings"> Show safety warnings
+                            </label>
+                        </div>
+                    </div>
+                    <div id="scanningTab" class="tab-content">
+                        <div class="form-group">
+                            <label>Max scan results:</label>
+                            <select id="maxResults" class="input-field">
+                                <option value="100">100</option>
+                                <option value="500">500</option>
+                                <option value="1000">1000</option>
+                                <option value="5000">5000</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Scan speed:</label>
+                            <select id="scanSpeed" class="input-field">
+                                <option value="fast">Fast (less accurate)</option>
+                                <option value="normal">Normal</option>
+                                <option value="thorough">Thorough (more accurate)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="appearanceTab" class="tab-content">
+                        <div class="form-group">
+                            <label>Theme:</label>
+                            <select id="theme" class="input-field">
+                                <option value="dark">Dark</option>
+                                <option value="light">Light</option>
+                                <option value="auto">Auto</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Font size:</label>
+                            <select id="fontSize" class="input-field">
+                                <option value="small">Small</option>
+                                <option value="medium">Medium</option>
+                                <option value="large">Large</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('settingsModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="saveSettings()">
+                    <i class="fas fa-save"></i> Save Settings
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>

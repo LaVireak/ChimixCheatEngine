@@ -1,0 +1,99 @@
+{
+  "name": "chimix-cheat-engine",
+  "version": "1.0.0",
+  "description": "A beautiful memory scanner for educational purposes.",
+  "main": "main.js",
+  "homepage": "https://github.com/chimix/ChimixCheatEngine",
+  "author": {
+    "name": "ChimixCheatEngine Team",
+    "email": "support@chimix.dev"
+  },
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "build": "electron-builder",
+    "build-win": "electron-builder --win",
+    "build-mac": "electron-builder --mac",
+    "build-linux": "electron-builder --linux",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder --publish=never",
+    "installer": "electron-builder --win --x64",
+    "portable": "electron-builder --win portable",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "build": {
+    "appId": "com.chimix.cheat-engine",
+    "productName": "ChimixCheatEngine",
+    "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build",
+      "app": "."
+    },
+    "files": [
+      "**/*",
+      "../build/**/*",
+      "../src/**/*",
+      "assets/**/*",
+      "package.json",
+      "!node_modules/**/*",
+      "node_modules/electron/**/*"
+    ],
+    "extraFiles": [
+      {
+        "from": "../build/ChimixCheatEngine.exe",
+        "to": "engine/ChimixCheatEngine.exe"
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64", "ia32"]
+        },
+        {
+          "target": "portable",
+          "arch": ["x64", "ia32"]
+        }
+      ],
+      "requestedExecutionLevel": "requireAdministrator",
+      "artifactName": "${productName}-${version}-Setup.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "ChimixCheatEngine"
+    },
+    "portable": {
+      "artifactName": "${productName}-${version}-Portable.${ext}"
+    },
+    "mac": {
+      "target": "dmg",
+      "category": "public.app-category.developer-tools"
+    },
+    "linux": {
+      "target": "AppImage",
+      "category": "Development"
+    }
+  },
+  "dependencies": {
+    "electron-store": "^8.1.0",
+    "ws": "^8.14.2"
+  },
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.6.4"
+  },
+  "keywords": [
+    "memory-scanner",
+    "cheat-engine",
+    "desktop-app",
+    "electron",
+    "windows"
+  ]
+}
