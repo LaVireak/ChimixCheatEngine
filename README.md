@@ -10,9 +10,9 @@
 
 ## 🚀 Quick Install
 
-### **[📥 Download Latest Installer](https://github.com/LaVireak/ChimixCheatEngine/releases/latest/download/ChimixCheatEngine-Setup.exe)**
+### **[📥 Download Latest Installer](https://github.com/LaVireak/ChimixCheatEngine/releases/latest/download/ChimixCheatEngine-1.0.0-Setup.exe)**
 
-*One-click download • No setup required • Automatic updates included*
+*One-click download • Professional installer • Automatic updates included*
 
 ---
 
@@ -21,7 +21,7 @@
 ### 🎯 End Users (Recommended)
 
 #### Option 1: Direct Download (Fastest)
-**[⬇️ Download ChimixCheatEngine-Setup.exe](https://github.com/LaVireak/ChimixCheatEngine/releases/latest/download/ChimixCheatEngine-Setup.exe)**
+**[⬇️ Download ChimixCheatEngine-Setup.exe](https://github.com/LaVireak/ChimixCheatEngine/releases/latest/download/ChimixCheatEngine-1.0.0-Setup.exe)**
 
 Simply click the link above to download the installer directly, then:
 1. **Run the installer** - Double-click the downloaded file
@@ -29,30 +29,30 @@ Simply click the link above to download the installer directly, then:
 3. **Follow the wizard** - Accept defaults for typical installation
 4. **Launch from desktop** - Use the created shortcut
 
-#### Option 2: Browse All Releases
+#### Option 2: Portable Version
+**[⬇️ Download Portable Version](https://github.com/LaVireak/ChimixCheatEngine/releases/latest/download/ChimixCheatEngine-1.0.0-Portable.exe)**
+
+No installation required - just download and run:
+1. Download the portable executable
+2. Place it in your preferred directory
+3. Run as administrator when needed for memory operations
+4. All settings stored locally in the same folder
+
+#### Option 3: Browse All Releases
 If you need a specific version or want to see all available downloads:
 
 1. **Visit the [📋 Releases Page](https://github.com/LaVireak/ChimixCheatEngine/releases)**
 2. **Find your preferred version** - Latest release is recommended
 3. **Download your choice:**
-   - `ChimixCheatEngine-Setup.exe` - Full installer with auto-updates
-   - `ChimixCheatEngine-Portable.exe` - Portable version, no installation required
+   - `ChimixCheatEngine-1.0.0-Setup.exe` - Full installer with auto-updates
+   - `ChimixCheatEngine-1.0.0-Portable.exe` - Portable version
 
 ### ✨ Installation Features
 - ✅ **Automatic Updates** - Stay current with latest features and security fixes
 - ✅ **Desktop Integration** - Start menu entries and desktop shortcuts
 - ✅ **Clean Uninstall** - Complete removal through Windows Settings
 - ✅ **Administrator Support** - Proper elevation for memory operations
-- ✅ **Virus Scanner Friendly** - Signed binaries (when available)
-
-### 📱 Portable Version
-
-Prefer a portable installation? **[Download Portable Version](https://github.com/LaVireak/ChimixCheatEngine/releases/latest/download/ChimixCheatEngine-Portable.exe)**
-
-1. Download the portable executable
-2. Place it in your preferred directory
-3. Run as administrator when needed for memory operations
-4. All settings stored locally in the same folder
+- ✅ **Multiple Architectures** - Support for both 32-bit and 64-bit systems
 
 ### 🛡️ Security Notice
 
@@ -63,49 +63,7 @@ Prefer a portable installation? **[Download Portable Version](https://github.com
 
 ---
 
-## Alternative Installation Methods
-
-### 👨‍💻 Developers & Advanced Users
-
-If you want to build from source or contribute to development:
-
-#### Prerequisites
-- Windows 10/11
-- Node.js 18+
-- MinGW-w64 compiler
-- Git
-
-#### Build Instructions
-```bash
-# Clone the repository
-git clone https://github.com/LaVireak/ChimixCheatEngine.git
-cd ChimixCheatEngine/desktop-app
-
-# Install dependencies
-npm install
-
-# Build the C++ engine
-build.bat
-
-# Run in development mode
-npm run dev
-
-# Create your own installer
-npm run build
-```
-
-### 🔧 Build Your Own Installer
-
-Available build scripts:
-- `build.bat` - Compile C++ engine only
-- `build-installer.bat` - Full build process (engine + installer)
-- `npm run build` - Create installer packages
-- `npm run portable` - Create portable version only
-- `npm run publish` - Build and publish to GitHub Releases
-
----
-
-## 📋 System Requirements
+## System Requirements
 
 ### Minimum Requirements
 - **OS**: Windows 10 (64-bit) or later
