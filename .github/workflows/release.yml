@@ -32,7 +32,12 @@ jobs:
 
       - name: Install dependencies
         working-directory: desktop-app
-        run: npm ci
+        run: |
+          if (Test-Path "package-lock.json") {
+            npm ci
+          } else {
+            npm install
+          }
 
       - name: Build C++ engine
         working-directory: desktop-app
