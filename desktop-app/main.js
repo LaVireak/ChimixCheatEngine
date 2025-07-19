@@ -123,7 +123,7 @@ console.log('Engine exists:', fs.existsSync(ENGINE_PATH));
 // App configuration
 const APP_CONFIG = {
     name: 'ChimixCheatEngine',
-    version: '1.0.0',
+    version: '1.0.9',
     width: 1200,
     height: 800,
     minWidth: 800,
