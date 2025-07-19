@@ -2,8 +2,31 @@ const { app, BrowserWindow, Menu, ipcMain, dialog, shell, nativeImage } = requir
 const path = require('path');
 const fs = require('fs');
 const { spawn, exec } = require('child_process');
-const Store = require('electron-store');
-const WebSocket = require('ws');
+
+// Try to import WebSocket, fallback if not available
+let WebSocket = null;
+try {
+    WebSocket = require('ws');
+} catch (error) {
+    console.log('ws module not available:', error.message);
+}
+
+// Try to import electron-store, fallback if not available
+let Store = null;
+let store = null;
+try {
+    Store = require('electron-store');
+    store = new Store();
+} catch (error) {
+    console.log('electron-store not available, using fallback storage:', error.message);
+    // Simple fallback storage
+    store = {
+        get: (key, defaultValue) => defaultValue,
+        set: (key, value) => {},
+        delete: (key) => {},
+        clear: () => {}
+    };
+}
 
 // Try to import electron-updater, fallback if not available
 let autoUpdater = null;
@@ -14,8 +37,7 @@ try {
     console.log('electron-updater not available:', error.message);
 }
 
-// Initialize store for persistent settings
-const store = new Store();
+// Initialize store for persistent settings - moved above since store is now initialized conditionally
 
 // Global variables
 let mainWindow;
@@ -258,6 +280,12 @@ function startEngineBackend() {
 }
 
 function startWebSocketServer() {
+    // Check if WebSocket is available
+    if (!WebSocket) {
+        console.log('WebSocket module not available, skipping WebSocket server');
+        return;
+    }
+
     const tryPort = (port) => {
         try {
             wsServer = new WebSocket.Server({ port });
