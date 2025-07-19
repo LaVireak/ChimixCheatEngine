@@ -6,13 +6,13 @@
 [![Framework](https://img.shields.io/badge/Framework-Electron-47848F.svg)]()
 [![Download](https://img.shields.io/github/downloads/LaVireak/ChimixCheatEngine/total.svg)](https://github.com/LaVireak/ChimixCheatEngine/releases/latest)
 
-**ChimixCheatEngine** is a professional-grade memory scanner and editor designed for educational purposes and reverse engineering research. Built with modern C++ and Electron technologies, it provides an intuitive interface for memory analysis, universal value scanning, and real-time memory modification capabilities.
+**ChimixCheatEngine** is a memory scanner and editor designed for educational purposes and reverse engineering research. Built with modern C++ and Electron technologies, it provides an intuitive interface for memory analysis, universal value scanning, and real-time memory modification capabilities.
 
 ## 🚀 Quick Install
 
-### **[📥 Download Latest Installer](https://github.com/LaVireak/ChimixCheatEngine/releases/latest/download/ChimixCheatEngine-1.0.0-Setup.exe)**
+### **[📥 Download Latest Installer](https://github.com/LaVireak/ChimixCheatEngine/releases/latest/download/ChimixCheatEngine-Setup.exe)**
 
-*One-click download • Professional installer • Automatic updates included*
+*One-click download • Easy installer • Automatic updates included*
 
 ---
 
@@ -21,7 +21,7 @@
 ### 🎯 End Users (Recommended)
 
 #### Option 1: Direct Download (Fastest)
-**[⬇️ Download ChimixCheatEngine-Setup.exe](https://github.com/LaVireak/ChimixCheatEngine/releases/latest/download/ChimixCheatEngine-1.0.0-Setup.exe)**
+**[⬇️ Download ChimixCheatEngine-Setup.exe](https://github.com/LaVireak/ChimixCheatEngine/releases/latest/download/ChimixCheatEngine-Setup.exe)**
 
 Simply click the link above to download the installer directly, then:
 1. **Run the installer** - Double-click the downloaded file
@@ -30,7 +30,7 @@ Simply click the link above to download the installer directly, then:
 4. **Launch from desktop** - Use the created shortcut
 
 #### Option 2: Portable Version
-**[⬇️ Download Portable Version](https://github.com/LaVireak/ChimixCheatEngine/releases/latest/download/ChimixCheatEngine-1.0.0-Portable.exe)**
+**[⬇️ Download Portable Version](https://github.com/LaVireak/ChimixCheatEngine/releases/latest/download/ChimixCheatEngine-Portable.exe)**
 
 No installation required - just download and run:
 1. Download the portable executable
@@ -44,8 +44,8 @@ If you need a specific version or want to see all available downloads:
 1. **Visit the [📋 Releases Page](https://github.com/LaVireak/ChimixCheatEngine/releases)**
 2. **Find your preferred version** - Latest release is recommended
 3. **Download your choice:**
-   - `ChimixCheatEngine-1.0.0-Setup.exe` - Full installer with auto-updates
-   - `ChimixCheatEngine-1.0.0-Portable.exe` - Portable version
+   - `ChimixCheatEngine-Setup.exe` - Full installer with auto-updates
+   - `ChimixCheatEngine-Portable.exe` - Portable version
 
 ### ✨ Installation Features
 - ✅ **Automatic Updates** - Stay current with latest features and security fixes
@@ -90,7 +90,7 @@ If you need a specific version or want to see all available downloads:
 
 ### User Interface
 
-- **Modern Desktop Application**: Clean, professional interface built with Electron
+- **Modern Desktop Application**: Clean interface built with Electron
 - **Process Management**: Intuitive process attachment and monitoring tools
 - **Real-time Communication**: WebSocket-based backend integration
 - **Comprehensive Results Display**: Advanced memory result visualization and modification tools
@@ -179,7 +179,7 @@ The project includes several build scripts for different scenarios:
 - Modern C++17 standards with RAII and smart pointers
 - Comprehensive error handling and logging
 - Memory-safe operations with proper cleanup
-- Professional UI/UX design patterns
+- Clean UI/UX design patterns
 
 ## Legal and Ethical Use
 
@@ -239,4 +239,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ---
 
-**Professional memory analysis tools for educational and research purposes.**
+**Memory analysis tools for educational and research purposes.**
