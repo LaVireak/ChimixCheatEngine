@@ -1,12 +1,12 @@
 {
   "name": "chimix-cheat-engine",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "A beautiful memory scanner for educational purposes.",
   "main": "main.js",
   "homepage": "https://github.com/LaVireak/ChimixCheatEngine",
   "author": {
-    "name": "ChimixCheatEngine Team",
-    "email": "support@chimix.dev"
+    "name": "La Vireak",
+    "email": "Lavireak9@gmail.com"
   },
   "license": "MIT",
   "scripts": {

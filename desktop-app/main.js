@@ -1,10 +1,18 @@
 const { app, BrowserWindow, Menu, ipcMain, dialog, shell, nativeImage } = require('electron');
-const { autoUpdater } = require('electron-updater');
 const path = require('path');
 const fs = require('fs');
 const { spawn, exec } = require('child_process');
 const Store = require('electron-store');
 const WebSocket = require('ws');
+
+// Try to import electron-updater, fallback if not available
+let autoUpdater = null;
+try {
+    const updaterModule = require('electron-updater');
+    autoUpdater = updaterModule.autoUpdater;
+} catch (error) {
+    console.log('electron-updater not available:', error.message);
+}
 
 // Initialize store for persistent settings
 const store = new Store();
@@ -20,60 +28,66 @@ let currentProcess = null;
 let scanResults = [];
 
 // Auto-updater configuration
-if (!isDev) {
-    autoUpdater.checkForUpdatesAndNotify();
-    autoUpdater.autoDownload = true;
-    autoUpdater.autoInstallOnAppQuit = true;
+if (!isDev && autoUpdater) {
+    try {
+        autoUpdater.checkForUpdatesAndNotify();
+        autoUpdater.autoDownload = true;
+        autoUpdater.autoInstallOnAppQuit = true;
+    } catch (error) {
+        console.error('Auto-updater configuration error:', error);
+    }
 }
 
-// Auto-updater event handlers
-autoUpdater.on('checking-for-update', () => {
-    console.log('Checking for update...');
-});
+// Auto-updater event handlers - only if autoUpdater is available
+if (autoUpdater) {
+    autoUpdater.on('checking-for-update', () => {
+        console.log('Checking for update...');
+    });
 
-autoUpdater.on('update-available', (info) => {
-    console.log('Update available:', info.version);
-    if (mainWindow) {
-        mainWindow.webContents.send('update-available', info.version);
-    }
-});
-
-autoUpdater.on('update-not-available', (info) => {
-    console.log('Update not available');
-});
-
-autoUpdater.on('error', (err) => {
-    console.log('Error in auto-updater:', err);
-});
-
-autoUpdater.on('download-progress', (progressObj) => {
-    let log_message = "Download speed: " + progressObj.bytesPerSecond;
-    log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
-    log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
-    console.log(log_message);
-    if (mainWindow) {
-        mainWindow.webContents.send('update-progress', progressObj);
-    }
-});
-
-autoUpdater.on('update-downloaded', (info) => {
-    console.log('Update downloaded');
-    if (mainWindow) {
-        mainWindow.webContents.send('update-downloaded', info.version);
-    }
-    // Show dialog to user asking if they want to install now
-    dialog.showMessageBox(mainWindow, {
-        type: 'info',
-        title: 'Update ready',
-        message: 'Update downloaded successfully. The application will restart to apply the update.',
-        buttons: ['Restart now', 'Later'],
-        defaultId: 0
-    }).then((result) => {
-        if (result.response === 0) {
-            autoUpdater.quitAndInstall();
+    autoUpdater.on('update-available', (info) => {
+        console.log('Update available:', info.version);
+        if (mainWindow) {
+            mainWindow.webContents.send('update-available', info.version);
         }
     });
-});
+
+    autoUpdater.on('update-not-available', (info) => {
+        console.log('Update not available');
+    });
+
+    autoUpdater.on('error', (err) => {
+        console.log('Error in auto-updater:', err);
+    });
+
+    autoUpdater.on('download-progress', (progressObj) => {
+        let log_message = "Download speed: " + progressObj.bytesPerSecond;
+        log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
+        log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
+        console.log(log_message);
+        if (mainWindow) {
+            mainWindow.webContents.send('update-progress', progressObj);
+        }
+    });
+
+    autoUpdater.on('update-downloaded', (info) => {
+        console.log('Update downloaded');
+        if (mainWindow) {
+            mainWindow.webContents.send('update-downloaded', info.version);
+        }
+        // Show dialog to user asking if they want to install now
+        dialog.showMessageBox(mainWindow, {
+            type: 'info',
+            title: 'Update ready',
+            message: 'Update downloaded successfully. The application will restart to apply the update.',
+            buttons: ['Restart now', 'Later'],
+            defaultId: 0
+        }).then((result) => {
+            if (result.response === 0) {
+                autoUpdater.quitAndInstall();
+            }
+        });
+    });
+}
 
 // Paths
 const ENGINE_PATH = isDev 
@@ -711,9 +725,13 @@ app.whenReady().then(() => {
     createWindow();
     
     // Check for updates after the app is ready (only in production)
-    if (!isDev) {
+    if (!isDev && autoUpdater) {
         setTimeout(() => {
-            autoUpdater.checkForUpdatesAndNotify();
+            try {
+                autoUpdater.checkForUpdatesAndNotify();
+            } catch (error) {
+                console.error('Auto-updater check error:', error);
+            }
         }, 3000); // Wait 3 seconds after startup
     }
     
@@ -765,16 +783,25 @@ ipcMain.handle('open-external', (event, url) => {
 
 // Auto-updater IPC handlers
 ipcMain.handle('check-for-updates', () => {
-    if (!isDev) {
-        autoUpdater.checkForUpdates();
-        return true;
+    if (!isDev && autoUpdater) {
+        try {
+            autoUpdater.checkForUpdates();
+            return true;
+        } catch (error) {
+            console.error('Check for updates error:', error);
+            return false;
+        }
     }
     return false;
 });
 
 ipcMain.handle('restart-and-install', () => {
-    if (!isDev) {
-        autoUpdater.quitAndInstall();
+    if (!isDev && autoUpdater) {
+        try {
+            autoUpdater.quitAndInstall();
+        } catch (error) {
+            console.error('Restart and install error:', error);
+        }
     }
 });
 
