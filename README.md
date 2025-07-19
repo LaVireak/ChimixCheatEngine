@@ -8,59 +8,6 @@
 
 **ChimixCheatEngine** is a memory scanner and editor designed for educational purposes and reverse engineering research. Built with modern C++ and Electron technologies, it provides an intuitive interface for memory analysis, universal value scanning, and real-time memory modification capabilities.
 
-## 🚀 Quick Install
-
-### **[📥 Download Latest Installer](https://github.com/LaVireak/ChimixCheatEngine/releases/latest/download/ChimixCheatEngine-Setup.exe)**
-
-*One-click download • Easy installer • Automatic updates included*
-
----
-
-## Installation
-
-### 🎯 End Users (Recommended)
-
-#### Option 1: Direct Download (Fastest)
-**[⬇️ Download ChimixCheatEngine-Setup.exe](https://github.com/LaVireak/ChimixCheatEngine/releases/latest/download/ChimixCheatEngine-Setup.exe)**
-
-Simply click the link above to download the installer directly, then:
-1. **Run the installer** - Double-click the downloaded file
-2. **Allow administrator access** - Click "Yes" when prompted
-3. **Follow the wizard** - Accept defaults for typical installation
-4. **Launch from desktop** - Use the created shortcut
-
-#### Option 2: Portable Version
-**[⬇️ Download Portable Version](https://github.com/LaVireak/ChimixCheatEngine/releases/latest/download/ChimixCheatEngine-Portable.exe)**
-
-No installation required - just download and run:
-1. Download the portable executable
-2. Place it in your preferred directory
-3. Run as administrator when needed for memory operations
-4. All settings stored locally in the same folder
-
-#### Option 3: Browse All Releases
-If you need a specific version or want to see all available downloads:
-
-1. **Visit the [📋 Releases Page](https://github.com/LaVireak/ChimixCheatEngine/releases)**
-2. **Find your preferred version** - Latest release is recommended
-3. **Download your choice:**
-   - `ChimixCheatEngine-Setup.exe` - Full installer with auto-updates
-   - `ChimixCheatEngine-Portable.exe` - Portable version
-
-### ✨ Installation Features
-- ✅ **Automatic Updates** - Stay current with latest features and security fixes
-- ✅ **Desktop Integration** - Start menu entries and desktop shortcuts
-- ✅ **Clean Uninstall** - Complete removal through Windows Settings
-- ✅ **Administrator Support** - Proper elevation for memory operations
-- ✅ **Multiple Architectures** - Support for both 32-bit and 64-bit systems
-
-### 🛡️ Security Notice
-
-- **Always download from official GitHub releases**
-- **Verify the download URL** starts with `github.com/LaVireak/ChimixCheatEngine`
-- **Run as administrator** for proper memory access permissions
-- **Antivirus software** may flag memory tools - this is expected behavior
-
 ---
 
 ## System Requirements
