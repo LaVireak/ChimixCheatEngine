@@ -150,7 +150,7 @@ console.log('Engine exists:', fs.existsSync(ENGINE_PATH));
 // App configuration
 const APP_CONFIG = {
     name: 'ChimixCheatEngine',
-    version: '1.0.9',
+    version: '1.0.10',
     width: 1200,
     height: 800,
     minWidth: 800,
@@ -310,15 +310,28 @@ function startWebSocketServer() {
     // Check if WebSocket is available
     if (!WebSocket) {
         console.log('WebSocket module not available, skipping WebSocket server');
+        if (mainWindow) {
+            mainWindow.webContents.send('engine-status', { status: 'mock', message: 'WebSocket module not available' });
+        }
         return;
     }
 
     const tryPort = (port) => {
         try {
-            wsServer = new WebSocket.Server({ port });
+            console.log(`Attempting to start WebSocket server on port ${port}`);
+            wsServer = new WebSocket.Server({ 
+                port: port,
+                host: '127.0.0.1' // Explicitly bind to localhost
+            });
             
             wsServer.on('connection', (ws) => {
                 console.log('WebSocket client connected');
+                
+                // Send initial status
+                ws.send(JSON.stringify({
+                    type: 'connected',
+                    message: 'WebSocket connection established'
+                }));
                 
                 ws.on('message', (message) => {
                     try {
@@ -332,21 +345,46 @@ function startWebSocketServer() {
                 ws.on('close', () => {
                     console.log('WebSocket client disconnected');
                 });
+                
+                ws.on('error', (error) => {
+                    console.error('WebSocket client error:', error);
+                });
+            });
+            
+            wsServer.on('listening', () => {
+                console.log(`WebSocket server successfully started on port ${port}`);
+                if (mainWindow) {
+                    mainWindow.webContents.send('engine-status', { 
+                        status: 'ready', 
+                        mode: 'websocket',
+                        port: port 
+                    });
+                }
             });
             
             wsServer.on('error', (error) => {
                 if (error.code === 'EADDRINUSE') {
                     console.log(`Port ${port} is busy, trying next port...`);
-                    tryPort(port + 1);
+                    setTimeout(() => tryPort(port + 1), 1000);
                 } else {
                     console.error('WebSocket server error:', error);
+                    if (mainWindow) {
+                        mainWindow.webContents.send('engine-status', { 
+                            status: 'error', 
+                            message: `WebSocket server error: ${error.message}` 
+                        });
+                    }
                 }
             });
             
-            console.log(`WebSocket server started on port ${port}`);
-            
         } catch (error) {
             console.error('Failed to start WebSocket server:', error);
+            if (mainWindow) {
+                mainWindow.webContents.send('engine-status', { 
+                    status: 'error', 
+                    message: `Failed to start WebSocket server: ${error.message}` 
+                });
+            }
         }
     };
     

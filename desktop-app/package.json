@@ -1,6 +1,7 @@
 {
   "name": "chimix-cheat-engine",
-  "version": "1.0.9",
+  "productName": "ChimixCheatEngine",
+  "version": "1.0.10",
   "description": "A beautiful memory scanner for educational purposes.",
   "main": "main.js",
   "homepage": "https://github.com/LaVireak/ChimixCheatEngine",

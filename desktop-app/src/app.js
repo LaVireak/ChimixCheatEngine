@@ -3,6 +3,7 @@
 // Application State
 let appState = {
     isConnected: false,
+    isMockMode: false,
     currentProcess: null,
     selectedProcess: null,
     scanResults: [],
@@ -76,7 +77,18 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeApp();
     setupEventListeners();
     setupElectronIntegration();
+    
+    // Try WebSocket connection with fallback to mock mode
     connectWebSocket();
+    
+    // Set up fallback timer for mock mode
+    setTimeout(() => {
+        if (!appState.isConnected) {
+            console.log('WebSocket connection failed, enabling mock mode');
+            enableMockMode();
+        }
+    }, 5000); // Give 5 seconds for WebSocket to connect
+    
     startTimers();
 });
 
@@ -251,6 +263,20 @@ function connectWebSocket() {
     };
     
     tryConnect(8080);
+}
+
+function enableMockMode() {
+    console.log('Enabling mock mode - simulating WebSocket functionality');
+    appState.isConnected = true;
+    appState.isMockMode = true;
+    updateConnectionStatus(true, 'mock');
+    showToast('Running in simulation mode - WebSocket unavailable', 'warning');
+    
+    // Enable controls that would normally be disabled
+    const controls = [elements.attachBtn, elements.refreshProcesses, elements.scanBtn];
+    controls.forEach(control => {
+        control.disabled = false;
+    });
 }
 
 function handleWebSocketMessage(data) {
@@ -442,11 +468,23 @@ async function attachToProcess() {
     }
 
     try {
-        // Send attach request via WebSocket
-        appState.ws.send(JSON.stringify({
-            type: 'attach',
-            processName: processName
-        }));
+        if (appState.isMockMode) {
+            // Simulate process attachment in mock mode
+            setTimeout(() => {
+                appState.currentProcess = {
+                    name: processName,
+                    pid: Math.floor(Math.random() * 9999) + 1000
+                };
+                updateProcessDisplay();
+                showToast(`Successfully attached to ${processName} (simulated)`, 'success');
+            }, 1000);
+        } else {
+            // Send attach request via WebSocket
+            appState.ws.send(JSON.stringify({
+                type: 'attach',
+                processName: processName
+            }));
+        }
         
         showToast(`Attaching to ${processName}...`, 'info');
     } catch (error) {
