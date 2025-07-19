@@ -187,14 +187,28 @@ function setupElectronIntegration() {
 }
 
 function connectWebSocket() {
+    let connectionAttempts = 0;
+    const maxAttempts = 5;
+    
     const tryConnect = (port) => {
+        if (connectionAttempts >= maxAttempts) {
+            console.log('Max WebSocket connection attempts reached, entering mock mode');
+            updateConnectionStatus(true, 'mock');
+            showToast('Running in simulation mode', 'warning');
+            return;
+        }
+        
+        connectionAttempts++;
+        
         try {
             const wsUrl = `ws://localhost:${port}`;
+            console.log(`Attempting WebSocket connection to ${wsUrl} (attempt ${connectionAttempts})`);
             appState.ws = new WebSocket(wsUrl);
             
             appState.ws.onopen = function() {
                 console.log(`WebSocket connected to port ${port}`);
-                updateConnectionStatus(true);
+                connectionAttempts = 0; // Reset on successful connection
+                updateConnectionStatus(true, 'connected');
                 showToast('Connected to memory engine', 'success');
             };
 
@@ -223,11 +237,16 @@ function connectWebSocket() {
                 // Try next port if this one fails
                 if (port < 8085) {
                     setTimeout(() => tryConnect(port + 1), 1000);
+                } else {
+                    // If all ports failed, try again with port 8080 after delay
+                    setTimeout(() => tryConnect(8080), 2000);
                 }
             };
         } catch (error) {
             console.error('Failed to connect WebSocket:', error);
             updateConnectionStatus(false);
+            // Try again after delay
+            setTimeout(() => tryConnect(port), 2000);
         }
     };
     
@@ -281,22 +300,28 @@ function startTimers() {
 }
 
 // UI Update Functions
-function updateConnectionStatus(connected) {
+function updateConnectionStatus(connected, mode = 'connected') {
     appState.isConnected = connected;
     const statusElement = elements.connectionStatus.querySelector('span');
     const iconElement = elements.connectionStatus.querySelector('i');
     
     if (connected) {
-        statusElement.textContent = 'Connected';
-        iconElement.className = 'fas fa-wifi';
-        iconElement.style.color = 'var(--success-color)';
+        if (mode === 'mock') {
+            statusElement.textContent = 'Simulation Mode';
+            iconElement.className = 'fas fa-flask';
+            iconElement.style.color = 'var(--warning-color)';
+        } else {
+            statusElement.textContent = 'Connected';
+            iconElement.className = 'fas fa-wifi';
+            iconElement.style.color = 'var(--success-color)';
+        }
     } else {
         statusElement.textContent = 'Disconnected';
         iconElement.className = 'fas fa-wifi-slash';
         iconElement.style.color = 'var(--error-color)';
     }
     
-    // Enable/disable controls
+    // Enable/disable controls based on connection status
     const controls = [elements.attachBtn, elements.refreshProcesses, elements.scanBtn];
     controls.forEach(control => {
         control.disabled = !connected;

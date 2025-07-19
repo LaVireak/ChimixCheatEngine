@@ -64,6 +64,9 @@ if (!isDev && autoUpdater) {
 if (autoUpdater) {
     autoUpdater.on('checking-for-update', () => {
         console.log('Checking for update...');
+        if (mainWindow) {
+            mainWindow.webContents.send('update-checking');
+        }
     });
 
     autoUpdater.on('update-available', (info) => {
@@ -71,14 +74,38 @@ if (autoUpdater) {
         if (mainWindow) {
             mainWindow.webContents.send('update-available', info.version);
         }
+        // Show notification dialog
+        dialog.showMessageBox(mainWindow, {
+            type: 'info',
+            title: 'Update Available',
+            message: `Update available: v${info.version}`,
+            detail: 'A new version of ChimixCheatEngine is available. It will be downloaded automatically.',
+            buttons: ['OK']
+        });
     });
 
     autoUpdater.on('update-not-available', (info) => {
         console.log('Update not available');
+        if (mainWindow) {
+            mainWindow.webContents.send('update-not-available');
+        }
+        // Only show dialog if user manually checked for updates
+        // We can track this with a flag or just show it for now
+        dialog.showMessageBox(mainWindow, {
+            type: 'info',
+            title: 'No Updates',
+            message: 'You are using the latest version',
+            detail: `Current version: v${APP_CONFIG.version}\nNo updates are available at this time.`,
+            buttons: ['OK']
+        });
     });
 
     autoUpdater.on('error', (err) => {
         console.log('Error in auto-updater:', err);
+        if (mainWindow) {
+            mainWindow.webContents.send('update-error', err.message);
+        }
+        dialog.showErrorBox('Update Error', `Failed to check for updates: ${err.message}`);
     });
 
     autoUpdater.on('download-progress', (progressObj) => {
@@ -704,15 +731,45 @@ function createMenu() {
             label: 'Help',
             submenu: [
                 {
+                    label: 'Check for Updates',
+                    accelerator: 'CmdOrCtrl+U',
+                    click: () => {
+                        if (!isDev && autoUpdater) {
+                            try {
+                                autoUpdater.checkForUpdates();
+                                dialog.showMessageBox(mainWindow, {
+                                    type: 'info',
+                                    title: 'Checking for Updates',
+                                    message: 'Checking for updates...',
+                                    detail: 'The application will notify you if an update is available.',
+                                    buttons: ['OK']
+                                });
+                            } catch (error) {
+                                console.error('Manual update check error:', error);
+                                dialog.showErrorBox('Update Check Failed', 'Unable to check for updates. Please try again later.');
+                            }
+                        } else {
+                            dialog.showMessageBox(mainWindow, {
+                                type: 'info',
+                                title: 'Development Mode',
+                                message: 'Update checking is disabled in development mode.',
+                                detail: 'Updates are only available in the production build.',
+                                buttons: ['OK']
+                            });
+                        }
+                    }
+                },
+                { type: 'separator' },
+                {
                     label: 'Documentation',
                     click: () => {
-                        shell.openExternal('https://github.com/chimix/ChimixCheatEngine');
+                        shell.openExternal('https://github.com/LaVireak/ChimixCheatEngine');
                     }
                 },
                 {
                     label: 'Report Bug',
                     click: () => {
-                        shell.openExternal('https://github.com/chimix/ChimixCheatEngine/issues');
+                        shell.openExternal('https://github.com/LaVireak/ChimixCheatEngine/issues');
                     }
                 },
                 { type: 'separator' },
