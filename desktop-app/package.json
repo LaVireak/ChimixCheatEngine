@@ -34,8 +34,8 @@
     },
     "files": [
       "**/*",
-      "../build/**/*",
-      "../src/**/*",
+      "build/**/*",
+      "src/**/*",
       "assets/**/*",
       "package.json",
       "!node_modules/**/*",
