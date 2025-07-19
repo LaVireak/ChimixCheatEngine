@@ -1,170 +1,224 @@
-# 🧠 ChimixCheatEngine
+# ChimixCheatEngine
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Windows](https://img.shields.io/badge/Platform-Windows-0078d4.svg)]()
-[![C++](https://img.shields.io/badge/Language-C%2B%2B-blue.svg)]()
-[![JavaScript](https://img.shields.io/badge/Language-JavaScript-yellow.svg)]()
+[![Platform](https://img.shields.io/badge/Platform-Windows-0078d4.svg)]()
+[![Language](https://img.shields.io/badge/Language-C%2B%2B-blue.svg)]()
+[![Framework](https://img.shields.io/badge/Framework-Electron-47848F.svg)]()
 
-A powerful, educational memory scanner and editor for Windows, built with modern C++ and Electron. ChimixCheatEngine provides an intuitive interface for memory analysis, featuring universal value scanning and real-time memory modification capabilities.
+**ChimixCheatEngine** is a professional-grade memory scanner and editor designed for educational purposes and reverse engineering research. Built with modern C++ and Electron technologies, it provides an intuitive interface for memory analysis, universal value scanning, and real-time memory modification capabilities.
 
-## ✨ Features
+## Features
 
-### 🎯 **Universal Memory Scanning**
-- **Smart Value Detection**: Automatically scans values as multiple data types (int8, int16, int32, float, double, string)
-- **Cheat Engine-like Interface**: Simple value input without manual type selection
-- **Advanced Filtering**: Next scan functionality to narrow down results
-- **Pattern Scanning**: Hex byte pattern searching with wildcard support
+### Memory Analysis
 
-### �️ **Modern Desktop Application**
-- **Electron-based GUI**: Clean, dark-themed interface
+- **Universal Value Scanning**: Automatically detects multiple data types (int8, int16, int32, float, double, string)
+- **Advanced Pattern Matching**: Hex byte pattern searching with wildcard support
+- **Real-time Filtering**: Next scan functionality to narrow down memory results
+- **Batch Operations**: Simultaneous modification of multiple memory addresses
+
+### User Interface
+
+- **Modern Desktop Application**: Clean, professional interface built with Electron
+- **Process Management**: Intuitive process attachment and monitoring tools
 - **Real-time Communication**: WebSocket-based backend integration
-- **Process Management**: Easy process attachment and monitoring
-- **Memory Results**: Comprehensive result display with modification tools
+- **Comprehensive Results Display**: Advanced memory result visualization and modification tools
 
-### ⚙️ **Core Engine**
-- **C++ Backend**: High-performance memory scanning engine
-- **Process Injection**: Safe memory reading and writing
-- **Error Handling**: Comprehensive error management and logging
-- **Cross-architecture**: Support for 32-bit and 64-bit processes
+### Core Engine
 
-## 🚀 Quick Start
+- **High-Performance C++ Backend**: Optimized memory scanning algorithms
+- **Safe Memory Operations**: Secure memory reading and writing with proper error handling
+- **Cross-Architecture Support**: Compatible with both 32-bit and 64-bit processes
+- **Automatic Updates**: Built-in update system for seamless version management
 
-### Prerequisites
-- **Windows 10/11**
-- **Node.js** (for desktop application)
-- **MinGW-w64** (for C++ compilation)
-- **Administrator privileges** (recommended)
+## Installation
 
-### Installation
+### End Users (Recommended)
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/yourusername/ChimixCheatEngine.git
-   cd ChimixCheatEngine
-   ```
+1. **Download the Installer**
+   - Navigate to the [Releases page](https://github.com/LaVireak/ChimixCheatEngine/releases)
+   - Download the latest `ChimixCheatEngine-Setup.exe`
 
-2. **Build the engine**
-   ```cmd
-   cd desktop-app
-   build.bat
-   ```
+2. **Install the Application**
+   - Right-click the installer and select "Run as administrator"
+   - Follow the installation wizard
+   - The application will be installed with desktop integration and automatic updates
 
-3. **Install dependencies**
-   ```cmd
-   npm install
-   ```
+3. **Launch the Application**
+   - Use the desktop shortcut or Start Menu entry
+   - Administrator privileges will be requested for memory access operations
 
-4. **Launch application**
-   ```cmd
-   launch.bat
-   ```
+### Portable Version
 
-## 🎮 Usage
+For users who prefer a portable installation:
 
-### Basic Memory Scanning
+1. Download `ChimixCheatEngine-Portable.exe` from releases
+2. Place the executable in your preferred directory
+3. Run as administrator when needed for memory operations
 
-1. **Attach to Process**
-   - Enter process name (e.g., `notepad.exe`)
-   - Click "Attach to Process"
-   - Or use the process selector to browse running processes
+### Developers
 
-2. **Scan for Values**
-   - Enter any value in the scan field (numbers, text, etc.)
-   - Click "Start Scan" - automatically detects all data types
-   - View results showing different interpretations
+#### Prerequisites
 
-3. **Filter Results**
-   - Change the value in your target application
+- Windows 10/11
+- Node.js 18+
+- MinGW-w64 compiler
+- Git
+
+#### Build Instructions
+
+```bash
+# Clone the repository
+git clone https://github.com/LaVireak/ChimixCheatEngine.git
+cd ChimixCheatEngine/desktop-app
+
+# Install dependencies
+npm install
+
+# Build the C++ engine
+build.bat
+
+# Run in development mode
+npm run dev
+
+# Create installer
+npm run build
+```
+
+## Usage
+
+### Basic Operations
+
+1. **Process Attachment**
+   - Enter the target process name (e.g., `notepad.exe`)
+   - Click "Attach to Process" or use the process selector
+
+2. **Memory Scanning**
+   - Input the value to search for in the scan field
+   - Click "Start Scan" to begin automatic type detection
+   - Review results with different data type interpretations
+
+3. **Result Filtering**
+   - Modify the value in the target application
    - Enter the new value and click "Next Scan"
-   - Repeat until you find the target memory address
+   - Repeat the process to isolate target memory addresses
 
-4. **Modify Memory**
-   - Right-click on results to modify values
-   - Changes are applied in real-time
+4. **Memory Modification**
+   - Right-click on scan results to access modification options
+   - Apply changes in real-time with immediate effect
 
 ### Advanced Features
 
-- **Pattern Scanning**: Use hex patterns like `48 8B ? ? 90` (? = wildcard)
-- **Memory Freezing**: Lock values to prevent changes
-- **Batch Operations**: Select multiple addresses for simultaneous modification
+- **Pattern Scanning**: Search using hex patterns with wildcard support (`48 8B ? ? 90`)
+- **Memory Freezing**: Lock values to prevent application modification
+- **Batch Processing**: Select and modify multiple memory addresses simultaneously
 
-## � Project Structure
+## Architecture
+
+### Project Structure
 
 ```
 ChimixCheatEngine/
-├── desktop-app/           # Electron desktop application
-│   ├── src/              # Frontend source code
-│   ├── cpp-src/          # C++ memory engine
-│   ├── build/            # Compiled binaries
-│   ├── main.js           # Electron main process
-│   └── package.json      # Dependencies
-├── build/                # Build artifacts
-└── README.md             # This file
+├── desktop-app/              # Electron application
+│   ├── src/                  # Frontend source code
+│   │   ├── index.html        # Main application UI
+│   │   ├── app.js           # Application logic
+│   │   └── styles.css       # User interface styling
+│   ├── cpp-src/             # C++ memory engine
+│   │   ├── main.cpp         # Engine entry point
+│   │   ├── MemoryScanner.*  # Core scanning functionality
+│   │   ├── ProcessManager.* # Process management
+│   │   └── Utils.*          # Utility functions
+│   ├── main.js              # Electron main process
+│   ├── preload.js           # Preload script for IPC
+│   └── package.json         # Dependencies and build config
+├── .github/workflows/       # CI/CD automation
+└── README.md               # Documentation
 ```
 
-## 🛠️ Development
+### Technology Stack
 
-### Building from Source
+- **Backend**: C++17 with Windows API integration
+- **Frontend**: HTML5, CSS3, JavaScript ES6+
+- **Framework**: Electron for cross-platform desktop deployment
+- **Communication**: WebSocket-based real-time IPC
+- **Build System**: Node.js with electron-builder
+- **CI/CD**: GitHub Actions for automated releases
 
-1. **Install Dependencies**
-   ```cmd
-   # Install MinGW-w64
-   # Add to PATH: C:\mingw64\bin
-   
-   # Install Node.js dependencies
-   cd desktop-app
-   npm install
-   ```
+## Development
 
-2. **Compile C++ Engine**
-   ```cmd
-   cd desktop-app
-   g++ -std=c++17 -O2 cpp-src/*.cpp -o build/ChimixCheatEngine.exe -lpsapi
-   ```
+### Build System
 
-3. **Run Development Mode**
-   ```cmd
-   npm run dev
-   ```
+The project includes several build scripts for different scenarios:
 
-### Code Architecture
+- `build.bat` - Compile C++ engine only
+- `build-installer.bat` - Complete build process including installer creation
+- `npm run dev` - Development mode with live reloading
+- `npm run build` - Production build with installer generation
+- `npm run publish` - Build and publish to GitHub Releases
 
-- **Backend**: C++ memory scanning engine with WebSocket communication
-- **Frontend**: Modern web technologies (HTML5, CSS3, JavaScript ES6+)
-- **IPC**: WebSocket-based real-time communication
-- **UI Framework**: Custom CSS with modern design principles
+### Code Quality
 
-## ⚠️ Legal Disclaimer
+- Modern C++17 standards with RAII and smart pointers
+- Comprehensive error handling and logging
+- Memory-safe operations with proper cleanup
+- Professional UI/UX design patterns
 
-**ChimixCheatEngine is intended for educational and research purposes only.**
+## Legal and Ethical Use
 
-- ✅ **Allowed**: Single-player games, educational research, reverse engineering learning
-- ❌ **Prohibited**: Online/multiplayer games, commercial software exploitation, malicious activities
+**Important**: ChimixCheatEngine is designed exclusively for educational and research purposes.
 
-**Users are responsible for compliance with applicable laws and terms of service.**
+### Permitted Use Cases
 
-## 🤝 Contributing
+- Educational research and learning about memory management
+- Reverse engineering for academic purposes
+- Single-player game modification for personal use
+- Security research and vulnerability analysis
 
-Contributions are welcome! Please feel free to submit pull requests or open issues for bugs and feature requests.
+### Prohibited Activities
+
+- Modification of online or multiplayer games
+- Commercial software exploitation
+- Circumvention of software protection systems
+- Any activities that violate terms of service or applicable laws
+
+**Users assume full responsibility for compliance with applicable laws and software licenses.**
+
+## Contributing
+
+We welcome contributions from the community. Please ensure all contributions align with the project's educational mission.
+
+### How to Contribute
 
 1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+2. Create a feature branch (`git checkout -b feature/enhancement-name`)
+3. Implement your changes with appropriate testing
+4. Commit your changes (`git commit -m 'Add enhancement description'`)
+5. Push to your branch (`git push origin feature/enhancement-name`)
+6. Submit a Pull Request with a detailed description
 
-## 📄 License
+### Code Standards
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+- Follow existing code formatting and conventions
+- Include comprehensive error handling
+- Add appropriate documentation for new features
+- Ensure compatibility with supported Windows versions
 
-## 🙏 Acknowledgments
+## Support
 
-- Inspired by the original Cheat Engine
-- Built with modern web technologies and C++
-- Community-driven development
+For questions, bug reports, or feature requests:
+
+- **Issues**: Use the GitHub Issues tracker
+- **Discussions**: Participate in GitHub Discussions
+- **Documentation**: Refer to the project wiki for detailed guides
+
+## Acknowledgments
+
+ChimixCheatEngine is inspired by the original Cheat Engine project and built using modern software development practices. We acknowledge the contributions of the reverse engineering and security research communities.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for complete terms and conditions.
 
 ---
 
-**⭐ Star this repository if you find it useful!**
-
-*Made with ❤️ for the reverse engineering and game development community*
+**Professional memory analysis tools for educational and research purposes.**

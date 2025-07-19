@@ -1,4 +1,5 @@
 const { app, BrowserWindow, Menu, ipcMain, dialog, shell, nativeImage } = require('electron');
+const { autoUpdater } = require('electron-updater');
 const path = require('path');
 const fs = require('fs');
 const { spawn, exec } = require('child_process');
@@ -17,6 +18,62 @@ let memoryEngine = null;
 let isEngineReady = false;
 let currentProcess = null;
 let scanResults = [];
+
+// Auto-updater configuration
+if (!isDev) {
+    autoUpdater.checkForUpdatesAndNotify();
+    autoUpdater.autoDownload = true;
+    autoUpdater.autoInstallOnAppQuit = true;
+}
+
+// Auto-updater event handlers
+autoUpdater.on('checking-for-update', () => {
+    console.log('Checking for update...');
+});
+
+autoUpdater.on('update-available', (info) => {
+    console.log('Update available:', info.version);
+    if (mainWindow) {
+        mainWindow.webContents.send('update-available', info.version);
+    }
+});
+
+autoUpdater.on('update-not-available', (info) => {
+    console.log('Update not available');
+});
+
+autoUpdater.on('error', (err) => {
+    console.log('Error in auto-updater:', err);
+});
+
+autoUpdater.on('download-progress', (progressObj) => {
+    let log_message = "Download speed: " + progressObj.bytesPerSecond;
+    log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
+    log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
+    console.log(log_message);
+    if (mainWindow) {
+        mainWindow.webContents.send('update-progress', progressObj);
+    }
+});
+
+autoUpdater.on('update-downloaded', (info) => {
+    console.log('Update downloaded');
+    if (mainWindow) {
+        mainWindow.webContents.send('update-downloaded', info.version);
+    }
+    // Show dialog to user asking if they want to install now
+    dialog.showMessageBox(mainWindow, {
+        type: 'info',
+        title: 'Update ready',
+        message: 'Update downloaded successfully. The application will restart to apply the update.',
+        buttons: ['Restart now', 'Later'],
+        defaultId: 0
+    }).then((result) => {
+        if (result.response === 0) {
+            autoUpdater.quitAndInstall();
+        }
+    });
+});
 
 // Paths
 const ENGINE_PATH = isDev 
@@ -653,6 +710,13 @@ function cleanup() {
 app.whenReady().then(() => {
     createWindow();
     
+    // Check for updates after the app is ready (only in production)
+    if (!isDev) {
+        setTimeout(() => {
+            autoUpdater.checkForUpdatesAndNotify();
+        }, 3000); // Wait 3 seconds after startup
+    }
+    
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) {
             createWindow();
@@ -697,6 +761,29 @@ ipcMain.handle('show-message-box', async (event, options) => {
 
 ipcMain.handle('open-external', (event, url) => {
     shell.openExternal(url);
+});
+
+// Auto-updater IPC handlers
+ipcMain.handle('check-for-updates', () => {
+    if (!isDev) {
+        autoUpdater.checkForUpdates();
+        return true;
+    }
+    return false;
+});
+
+ipcMain.handle('restart-and-install', () => {
+    if (!isDev) {
+        autoUpdater.quitAndInstall();
+    }
+});
+
+ipcMain.handle('get-update-status', () => {
+    return {
+        isDev: isDev,
+        updateAvailable: false, // This will be updated by the updater events
+        version: APP_CONFIG.version
+    };
 });
 
 ipcMain.handle('get-store-value', (event, key, defaultValue) => {

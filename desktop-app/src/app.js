@@ -60,7 +60,15 @@ const elements = {
     processSearch: document.getElementById('processSearch'),
     processListContainer: document.getElementById('processListContainer'),
     loadingProcesses: document.getElementById('loadingProcesses'),
-    openSelectedProcess: document.getElementById('openSelectedProcess')
+    openSelectedProcess: document.getElementById('openSelectedProcess'),
+    // Update notification elements
+    updateNotification: document.getElementById('updateNotification'),
+    updateText: document.getElementById('updateText'),
+    updateNow: document.getElementById('updateNow'),
+    updateLater: document.getElementById('updateLater'),
+    updateProgress: document.getElementById('updateProgress'),
+    progressFillUpdate: document.getElementById('progressFill'),
+    progressText: document.getElementById('progressText')
 };
 
 // Initialize Application
@@ -125,6 +133,10 @@ function setupEventListeners() {
     elements.deselectAll.addEventListener('click', deselectAllResults);
     elements.selectAllCheckbox.addEventListener('change', toggleSelectAll);
 
+    // Update notification buttons
+    elements.updateNow.addEventListener('click', installUpdateNow);
+    elements.updateLater.addEventListener('click', hideUpdateNotification);
+
     // Keyboard shortcuts
     document.addEventListener('keydown', handleKeyboardShortcuts);
 }
@@ -158,6 +170,19 @@ function setupElectronIntegration() {
     // Engine status
     window.electronAPI.onEngineStatus((event, status) => {
         updateEngineStatus(status);
+    });
+
+    // Auto-updater events
+    window.electronAPI.onUpdateAvailable((event, version) => {
+        showUpdateNotification(`Update ${version} is available`, 'available');
+    });
+
+    window.electronAPI.onUpdateProgress((event, progressObj) => {
+        showUpdateProgress(progressObj.percent, `Downloading... ${Math.round(progressObj.percent)}%`);
+    });
+
+    window.electronAPI.onUpdateDownloaded((event, version) => {
+        showUpdateNotification(`Update ${version} ready to install`, 'downloaded');
     });
 }
 
@@ -1101,6 +1126,55 @@ function handleKeyboardShortcuts(e) {
                 modal.style.display = 'none';
             }
         });
+    }
+}
+
+// Update notification functions
+function showUpdateNotification(message, type = 'available') {
+    elements.updateText.textContent = message;
+    elements.updateNotification.classList.remove('hidden');
+    elements.updateProgress.classList.add('hidden');
+    
+    if (type === 'downloaded') {
+        elements.updateNow.textContent = 'Restart & Install';
+        elements.updateLater.textContent = 'Later';
+    } else {
+        elements.updateNow.textContent = 'Download Now';
+        elements.updateLater.textContent = 'Later';
+    }
+    
+    // Add class to app to adjust content margin
+    document.querySelector('.app').classList.add('update-visible');
+}
+
+function showUpdateProgress(percent, message) {
+    elements.updateProgress.classList.remove('hidden');
+    elements.progressFillUpdate.style.width = `${percent}%`;
+    elements.progressText.textContent = message;
+}
+
+function hideUpdateNotification() {
+    elements.updateNotification.classList.add('hidden');
+    document.querySelector('.app').classList.remove('update-visible');
+}
+
+async function installUpdateNow() {
+    try {
+        const buttonText = elements.updateNow.textContent;
+        if (buttonText === 'Restart & Install') {
+            // Update is downloaded, restart to install
+            await window.electronAPI.restartAndInstall();
+        } else {
+            // Start manual update check
+            elements.updateNow.disabled = true;
+            elements.updateNow.textContent = 'Checking...';
+            await window.electronAPI.checkForUpdates();
+        }
+    } catch (error) {
+        console.error('Error during update:', error);
+        showToast('Update failed. Please try again.', 'error');
+        elements.updateNow.disabled = false;
+        elements.updateNow.textContent = 'Download Now';
     }
 }
 

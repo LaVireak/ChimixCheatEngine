@@ -25,6 +25,16 @@ contextBridge.exposeInMainWorld('electronAPI', {
     // Engine status
     onEngineStatus: (callback) => ipcRenderer.on('engine-status', callback),
     
+    // Auto-updater methods
+    checkForUpdates: () => ipcRenderer.invoke('check-for-updates'),
+    restartAndInstall: () => ipcRenderer.invoke('restart-and-install'),
+    getUpdateStatus: () => ipcRenderer.invoke('get-update-status'),
+    
+    // Auto-updater events
+    onUpdateAvailable: (callback) => ipcRenderer.on('update-available', callback),
+    onUpdateProgress: (callback) => ipcRenderer.on('update-progress', callback),
+    onUpdateDownloaded: (callback) => ipcRenderer.on('update-downloaded', callback),
+    
     // Platform info
     platform: process.platform,
     

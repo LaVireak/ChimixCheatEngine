@@ -778,6 +778,85 @@ body {
     }
 }
 
+/* Update Notification */
+.update-notification {
+    position: fixed;
+    top: var(--title-bar-height);
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    padding: 12px 20px;
+    z-index: 1500;
+    box-shadow: var(--shadow);
+    animation: slideDown 0.3s ease;
+}
+
+.update-notification.hidden {
+    display: none;
+}
+
+.update-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.update-content i {
+    font-size: 16px;
+    margin-right: 8px;
+}
+
+.update-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.update-progress {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: white;
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+#progressText {
+    font-size: 12px;
+    min-width: 80px;
+    text-align: right;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Update main content margin when update notification is visible */
+.app.update-visible .main-content {
+    margin-top: 60px;
+}
+
 /* Utility Classes */
 .hidden {
     display: none !important;

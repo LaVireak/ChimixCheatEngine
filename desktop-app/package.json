@@ -18,6 +18,7 @@
     "build-linux": "electron-builder --linux",
     "pack": "electron-builder --dir",
     "dist": "electron-builder --publish=never",
+    "publish": "electron-builder --publish=always",
     "installer": "electron-builder --win --x64",
     "portable": "electron-builder --win portable",
     "test": "echo \"No tests specified\" && exit 0"
@@ -46,6 +47,11 @@
         "to": "engine/ChimixCheatEngine.exe"
       }
     ],
+    "publish": {
+      "provider": "github",
+      "owner": "LaVireak",
+      "repo": "ChimixCheatEngine"
+    },
     "win": {
       "target": [
         {
@@ -83,6 +89,7 @@
   },
   "dependencies": {
     "electron-store": "^8.1.0",
+    "electron-updater": "^6.1.7",
     "ws": "^8.14.2"
   },
   "devDependencies": {
