@@ -4,8 +4,122 @@
 [![Platform](https://img.shields.io/badge/Platform-Windows-0078d4.svg)]()
 [![Language](https://img.shields.io/badge/Language-C%2B%2B-blue.svg)]()
 [![Framework](https://img.shields.io/badge/Framework-Electron-47848F.svg)]()
+[![Download](https://img.shields.io/github/downloads/LaVireak/ChimixCheatEngine/total.svg)](https://github.com/LaVireak/ChimixCheatEngine/releases/latest)
 
 **ChimixCheatEngine** is a professional-grade memory scanner and editor designed for educational purposes and reverse engineering research. Built with modern C++ and Electron technologies, it provides an intuitive interface for memory analysis, universal value scanning, and real-time memory modification capabilities.
+
+## 🚀 Quick Install
+
+### **[📥 Download Latest Installer](https://github.com/LaVireak/ChimixCheatEngine/releases/latest/download/ChimixCheatEngine-Setup.exe)**
+
+*One-click download • No setup required • Automatic updates included*
+
+---
+
+## Installation
+
+### 🎯 End Users (Recommended)
+
+#### Option 1: Direct Download (Fastest)
+**[⬇️ Download ChimixCheatEngine-Setup.exe](https://github.com/LaVireak/ChimixCheatEngine/releases/latest/download/ChimixCheatEngine-Setup.exe)**
+
+Simply click the link above to download the installer directly, then:
+1. **Run the installer** - Double-click the downloaded file
+2. **Allow administrator access** - Click "Yes" when prompted
+3. **Follow the wizard** - Accept defaults for typical installation
+4. **Launch from desktop** - Use the created shortcut
+
+#### Option 2: Browse All Releases
+If you need a specific version or want to see all available downloads:
+
+1. **Visit the [📋 Releases Page](https://github.com/LaVireak/ChimixCheatEngine/releases)**
+2. **Find your preferred version** - Latest release is recommended
+3. **Download your choice:**
+   - `ChimixCheatEngine-Setup.exe` - Full installer with auto-updates
+   - `ChimixCheatEngine-Portable.exe` - Portable version, no installation required
+
+### ✨ Installation Features
+- ✅ **Automatic Updates** - Stay current with latest features and security fixes
+- ✅ **Desktop Integration** - Start menu entries and desktop shortcuts
+- ✅ **Clean Uninstall** - Complete removal through Windows Settings
+- ✅ **Administrator Support** - Proper elevation for memory operations
+- ✅ **Virus Scanner Friendly** - Signed binaries (when available)
+
+### 📱 Portable Version
+
+Prefer a portable installation? **[Download Portable Version](https://github.com/LaVireak/ChimixCheatEngine/releases/latest/download/ChimixCheatEngine-Portable.exe)**
+
+1. Download the portable executable
+2. Place it in your preferred directory
+3. Run as administrator when needed for memory operations
+4. All settings stored locally in the same folder
+
+### 🛡️ Security Notice
+
+- **Always download from official GitHub releases**
+- **Verify the download URL** starts with `github.com/LaVireak/ChimixCheatEngine`
+- **Run as administrator** for proper memory access permissions
+- **Antivirus software** may flag memory tools - this is expected behavior
+
+---
+
+## Alternative Installation Methods
+
+### 👨‍💻 Developers & Advanced Users
+
+If you want to build from source or contribute to development:
+
+#### Prerequisites
+- Windows 10/11
+- Node.js 18+
+- MinGW-w64 compiler
+- Git
+
+#### Build Instructions
+```bash
+# Clone the repository
+git clone https://github.com/LaVireak/ChimixCheatEngine.git
+cd ChimixCheatEngine/desktop-app
+
+# Install dependencies
+npm install
+
+# Build the C++ engine
+build.bat
+
+# Run in development mode
+npm run dev
+
+# Create your own installer
+npm run build
+```
+
+### 🔧 Build Your Own Installer
+
+Available build scripts:
+- `build.bat` - Compile C++ engine only
+- `build-installer.bat` - Full build process (engine + installer)
+- `npm run build` - Create installer packages
+- `npm run portable` - Create portable version only
+- `npm run publish` - Build and publish to GitHub Releases
+
+---
+
+## 📋 System Requirements
+
+### Minimum Requirements
+- **OS**: Windows 10 (64-bit) or later
+- **RAM**: 4GB minimum, 8GB recommended
+- **Storage**: 50MB free space
+- **Permissions**: Administrator access for memory operations
+
+### Recommended Setup
+- **OS**: Windows 11 (latest updates)
+- **RAM**: 16GB for optimal performance
+- **Antivirus**: Exclusion rules for memory scanning tools
+- **UAC**: Enabled for security (application will request elevation)
+
+---
 
 ## Features
 
@@ -29,60 +143,6 @@
 - **Safe Memory Operations**: Secure memory reading and writing with proper error handling
 - **Cross-Architecture Support**: Compatible with both 32-bit and 64-bit processes
 - **Automatic Updates**: Built-in update system for seamless version management
-
-## Installation
-
-### End Users (Recommended)
-
-1. **Download the Installer**
-   - Navigate to the [Releases page](https://github.com/LaVireak/ChimixCheatEngine/releases)
-   - Download the latest `ChimixCheatEngine-Setup.exe`
-
-2. **Install the Application**
-   - Right-click the installer and select "Run as administrator"
-   - Follow the installation wizard
-   - The application will be installed with desktop integration and automatic updates
-
-3. **Launch the Application**
-   - Use the desktop shortcut or Start Menu entry
-   - Administrator privileges will be requested for memory access operations
-
-### Portable Version
-
-For users who prefer a portable installation:
-
-1. Download `ChimixCheatEngine-Portable.exe` from releases
-2. Place the executable in your preferred directory
-3. Run as administrator when needed for memory operations
-
-### Developers
-
-#### Prerequisites
-
-- Windows 10/11
-- Node.js 18+
-- MinGW-w64 compiler
-- Git
-
-#### Build Instructions
-
-```bash
-# Clone the repository
-git clone https://github.com/LaVireak/ChimixCheatEngine.git
-cd ChimixCheatEngine/desktop-app
-
-# Install dependencies
-npm install
-
-# Build the C++ engine
-build.bat
-
-# Run in development mode
-npm run dev
-
-# Create installer
-npm run build
-```
 
 ## Usage
 
