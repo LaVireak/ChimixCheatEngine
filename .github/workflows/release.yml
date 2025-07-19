@@ -23,8 +23,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'npm'
-          cache-dependency-path: desktop-app/package-lock.json
 
       - name: Setup MinGW
         uses: msys2/setup-msys2@v2
