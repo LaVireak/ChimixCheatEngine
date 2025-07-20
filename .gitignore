@@ -4,6 +4,12 @@
 *.o
 build/
 dist/
+desktop-app/dist/
+desktop-app/dist-new/
+*.blockmap
+*.yaml
+*.yml
+!desktop-app/build/*.exe
 
 # Node.js dependencies
 node_modules/
