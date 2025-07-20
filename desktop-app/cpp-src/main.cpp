@@ -267,62 +267,72 @@ void ReadMemoryAddress(ProcessManager& procManager, MemoryScanner& scanner) {
 }
 
 int main() {
+    LogToFile("[ENGINE] Starting ChimixCheatEngine engine process");
     // Set console to handle output properly
     SetConsoleOutputCP(CP_UTF8);
-    
-    std::cout << "ChimixCheatEngine - Simple Memory Scanner & Editor" << std::endl;
-    std::cout << "For educational and offline use only!" << std::endl;
-    PrintSeparator();
-    
-    ProcessManager procManager;
-    MemoryScanner scanner(procManager.GetProcessHandle());
-    
-    int choice;
-    do {
-        PrintMenu();
-        std::cin >> choice;
-        
-        switch (choice) {
-            case 1:
-                AttachToProcess(procManager);
-                // Update scanner with new process handle
-                scanner = MemoryScanner(procManager.GetProcessHandle());
-                break;
-            case 2:
-                ScanForValue(procManager, scanner);
-                break;
-            case 3:
-                ScanForFloatValue(procManager, scanner);
-                break;
-            case 4:
-                ScanForPointers(procManager, scanner);
-                break;
-            case 5:
-                ViewResults(scanner);
-                break;
-            case 6:
-                ViewFloatResults(scanner);
-                break;
-            case 7:
-                ViewPointerResults(scanner);
-                break;
-            case 8:
-                ModifyMemoryValue(procManager, scanner);
-                break;
-            case 9:
-                ModifyFloatMemoryValue(procManager, scanner);
-                break;
-            case 10:
-                ReadMemoryAddress(procManager, scanner);
-                break;
-            case 0:
-                std::cout << "Goodbye!" << std::endl;
-                break;
-            default:
-                std::cout << "Invalid choice. Please try again." << std::endl;
-        }
-        
-    } while (choice != 0);
-    
+    try {
+        std::cout << "ChimixCheatEngine - Simple Memory Scanner & Editor" << std::endl;
+        std::cout << "For educational and offline use only!" << std::endl;
+        PrintSeparator();
+
+        ProcessManager procManager;
+        MemoryScanner scanner(procManager.GetProcessHandle());
+
+        int choice;
+        do {
+            PrintMenu();
+            std::cin >> choice;
+
+            switch (choice) {
+                case 1:
+                    AttachToProcess(procManager);
+                    // Update scanner with new process handle
+                    scanner = MemoryScanner(procManager.GetProcessHandle());
+                    break;
+                case 2:
+                    ScanForValue(procManager, scanner);
+                    break;
+                case 3:
+                    ScanForFloatValue(procManager, scanner);
+                    break;
+                case 4:
+                    ScanForPointers(procManager, scanner);
+                    break;
+                case 5:
+                    ViewResults(scanner);
+                    break;
+                case 6:
+                    ViewFloatResults(scanner);
+                    break;
+                case 7:
+                    ViewPointerResults(scanner);
+                    break;
+                case 8:
+                    ModifyMemoryValue(procManager, scanner);
+                    break;
+                case 9:
+                    ModifyFloatMemoryValue(procManager, scanner);
+                    break;
+                case 10:
+                    ReadMemoryAddress(procManager, scanner);
+                    break;
+                case 0:
+                    std::cout << "Goodbye!" << std::endl;
+                    LogToFile("[ENGINE] Exiting ChimixCheatEngine engine process");
+                    break;
+                default:
+                    std::cout << "Invalid choice. Please try again." << std::endl;
+            }
+
+        } while (choice != 0);
+    } catch (const std::exception& ex) {
+        LogToFile(std::string("[ENGINE][EXCEPTION] ") + ex.what());
+        std::cerr << "Fatal error: " << ex.what() << std::endl;
+        return 1;
+    } catch (...) {
+        LogToFile("[ENGINE][EXCEPTION] Unknown exception occurred");
+        std::cerr << "Fatal unknown error occurred." << std::endl;
+        return 1;
+    }
     return 0;
 }

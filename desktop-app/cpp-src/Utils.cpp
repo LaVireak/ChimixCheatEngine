@@ -62,3 +62,29 @@ LPVOID HexStringToAddress(const std::string& hexStr) {
 void PrintSeparator() {
     std::cout << "============================================" << std::endl;
 }
+
+// Simple file logger for debugging engine startup and errors
+#include <fstream>
+#include <ctime>
+#include <windows.h>
+#include <shlobj.h>
+#include <sys/stat.h>
+void LogToFile(const std::string& message) {
+    // Get %LOCALAPPDATA%\ChimixCheatEngine\engine.log
+    char appDataPath[MAX_PATH];
+    if (SUCCEEDED(SHGetFolderPathA(NULL, CSIDL_LOCAL_APPDATA, NULL, 0, appDataPath))) {
+        std::string logDir = std::string(appDataPath) + "\\ChimixCheatEngine";
+        // Create directory if it doesn't exist
+        CreateDirectoryA(logDir.c_str(), NULL);
+        std::string logPath = logDir + "\\engine.log";
+        std::ofstream log(logPath, std::ios::app);
+        if (log.is_open()) {
+            // Timestamp
+            std::time_t now = std::time(nullptr);
+            char buf[32];
+            std::strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", std::localtime(&now));
+            log << "[" << buf << "] " << message << std::endl;
+            log.close();
+        }
+    }
+}

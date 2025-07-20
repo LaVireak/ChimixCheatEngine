@@ -964,21 +964,35 @@ function cleanup() {
         wsServer.close();
         wsServer = null;
     }
-    
-    // Kill engine process
+
+    // Kill engine process (cross-platform)
     if (engineProcess && !engineProcess.killed) {
         console.log('Terminating engine process...');
-        engineProcess.kill('SIGTERM');
-        
-        // Force kill if it doesn't close gracefully
-        setTimeout(() => {
-            if (engineProcess && !engineProcess.killed) {
-                console.log('Force killing engine process...');
-                engineProcess.kill('SIGKILL');
+        if (process.platform === 'win32') {
+            // Use taskkill to forcefully kill the process tree on Windows
+            const pid = engineProcess.pid;
+            if (pid) {
+                const { exec } = require('child_process');
+                exec(`taskkill /PID ${pid} /T /F`, (err, stdout, stderr) => {
+                    if (err) {
+                        console.error('taskkill error:', err);
+                    } else {
+                        console.log('taskkill output:', stdout);
+                    }
+                });
             }
-        }, 3000);
+        } else {
+            engineProcess.kill('SIGTERM');
+            // Force kill if it doesn't close gracefully
+            setTimeout(() => {
+                if (engineProcess && !engineProcess.killed) {
+                    console.log('Force killing engine process...');
+                    engineProcess.kill('SIGKILL');
+                }
+            }, 3000);
+        }
     }
-    
+
     // Save window bounds
     saveWindowBounds();
 }

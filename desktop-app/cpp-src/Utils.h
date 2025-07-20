@@ -22,3 +22,6 @@ LPVOID HexStringToAddress(const std::string& hexStr);
 
 // Print separator line
 void PrintSeparator();
+
+// Log a message to the engine log file in AppData
+void LogToFile(const std::string& message);
