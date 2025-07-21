@@ -26,6 +26,6 @@ jobs:
       - name: Build C++ engine
         shell: msys2 {0}
         run: |
-          mingw64.exe -c './build.sh'
+          bash -lc './build.sh'
 
       # Add more steps as needed, e.g., test, package, upload artifacts
