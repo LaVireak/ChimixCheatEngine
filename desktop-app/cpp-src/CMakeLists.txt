@@ -14,9 +14,12 @@ endif()
 
 # Source files
 file(GLOB_RECURSE SOURCES "*.cpp" "*.h")
-# Exclude third-party/json/docs and third-party/json/tests (and subfolders) from SOURCES
+# Exclude unwanted files and folders from SOURCES
 list(FILTER SOURCES EXCLUDE REGEX "third-party/json/docs/")
 list(FILTER SOURCES EXCLUDE REGEX "third-party/json/tests/")
+list(FILTER SOURCES EXCLUDE REGEX "third-party/json/cmake/")
+list(FILTER SOURCES EXCLUDE REGEX "third-party/json/tools/")
+list(FILTER SOURCES EXCLUDE REGEX "CMakeFiles/")
 
 # Create executable
 
