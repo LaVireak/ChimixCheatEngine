@@ -13,8 +13,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+
+      - name: Install MinGW-w64
+        run: |
+          choco install mingw -y
+
       - name: Build C++ engine
         run: |
-          desktop-app\\build.bat
+          set "PATH=C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin;%PATH%"
+          desktop-app\build.bat
 
       # Add more steps as needed, e.g., test, package, upload artifacts
