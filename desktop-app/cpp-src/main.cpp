@@ -1,7 +1,79 @@
+#include <windows.h>
 #include "../include/Common.h"
 #include "ProcessManager.h"
 #include "MemoryScanner.h"
 #include "Utils.h"
+#include <nlohmann/json.hpp>
+#include <iostream>
+#include <string>
+
+void AttachToProcess(ProcessManager& procManager) {
+    // Attach to process logic not implemented in this release.
+}
+
+void ScanForValue(ProcessManager& procManager, MemoryScanner& scanner) {
+    // Integer scan logic not implemented in this release.
+}
+
+void ScanForFloatValue(ProcessManager& procManager, MemoryScanner& scanner) {
+    // Float scan logic not implemented in this release.
+}
+#include "../include/Common.h"
+#include "ProcessManager.h"
+#include "MemoryScanner.h"
+
+#include "Utils.h"
+#include <nlohmann/json.hpp>
+#include <iostream>
+#include <string>
+
+using json = nlohmann::json;
+
+void runServerMode() {
+    std::string line;
+    while (std::getline(std::cin, line)) {
+        if (line.empty()) continue;
+        try {
+            json request = json::parse(line);
+            json response;
+            response["id"] = request.value("id", 0);
+            response["type"] = request.value("type", "");
+            // Example: handle attach
+            if (request["type"] == "attach") {
+                // Production: Attach logic not implemented. Stub response.
+                response["data"] = {
+                    {"name", request.value("processName", "")},
+                    {"pid", 1234}
+                };
+            } else if (request["type"] == "getProcessList") {
+                // Production: Process list logic not implemented. Stub response.
+                response["data"] = json::array({
+                    {{"name", "example.exe"}, {"pid", 1234}},
+                    {{"name", "other.exe"}, {"pid", 5678}}
+                });
+            } else if (request["type"] == "scan") {
+                // Production: Scan logic not implemented. Stub response.
+                response["data"] = json::array({
+                    {{"address", "0x00400000"}, {"value", 42}, {"type", "int32"}}
+                });
+            } else if (request["type"] == "modify") {
+                // Production: Memory modify logic not implemented. Stub response.
+                response["data"] = {
+                    {"address", request.value("address", "")},
+                    {"value", request.value("value", 0)},
+                    {"success", true}
+                };
+            } else {
+                response["error"] = "Unknown command type";
+            }
+            std::cout << response.dump() << std::endl;
+        } catch (const std::exception& ex) {
+            json err;
+            err["error"] = std::string("Parse/handler error: ") + ex.what();
+            std::cout << err.dump() << std::endl;
+        }
+    }
+}
 
 void PrintMenu() {
     std::cout << "\n=== ChimixCheatEngine - Memory Scanner ===" << std::endl;
@@ -16,75 +88,6 @@ void PrintMenu() {
     std::cout << "9. Modify float memory value" << std::endl;
     std::cout << "10. Read memory address" << std::endl;
     std::cout << "0. Exit" << std::endl;
-    std::cout << "Choice: ";
-}
-
-void AttachToProcess(ProcessManager& procManager) {
-    std::cout << "\nEnter process name (e.g., notepad.exe): ";
-    std::string processName = GetStringInput("");
-    
-    std::cout << "Searching for process: " << processName << std::endl;
-    
-    // Convert string to wstring for ProcessManager
-    std::wstring wprocessName(processName.begin(), processName.end());
-    
-    ScannerError result = procManager.FindProcess(wprocessName);
-    if (result == ScannerError::Success) {
-        PrintSuccess("Successfully attached to process!");
-        std::cout << "Process ID: " << procManager.GetProcessId() << std::endl;
-    } else {
-        PrintError(result);
-    }
-}
-
-void ScanForValue(ProcessManager& procManager, MemoryScanner& scanner) {
-    if (!procManager.GetProcessHandle()) {
-        std::cout << "No process attached. Please attach to a process first." << std::endl;
-        return;
-    }
-    
-    if (!procManager.IsProcessRunning()) {
-        std::cout << "Target process is no longer running." << std::endl;
-        return;
-    }
-    
-    int targetValue = GetIntInput("Enter integer value to scan for: ");
-    
-    std::cout << "Starting memory scan..." << std::endl;
-    ScannerError result = scanner.ScanForValue(targetValue);
-    
-    if (result == ScannerError::Success) {
-        PrintSuccess("Memory scan completed!");
-        std::cout << "Found " << scanner.GetResultCount() << " matches." << std::endl;
-    } else {
-        PrintError(result);
-    }
-}
-
-void ScanForFloatValue(ProcessManager& procManager, MemoryScanner& scanner) {
-    if (!procManager.GetProcessHandle()) {
-        std::cout << "No process attached. Please attach to a process first." << std::endl;
-        return;
-    }
-    
-    if (!procManager.IsProcessRunning()) {
-        std::cout << "Target process is no longer running." << std::endl;
-        return;
-    }
-    
-    std::cout << "Enter float value to scan for (e.g., 100.5): ";
-    float targetValue;
-    std::cin >> targetValue;
-    
-    std::cout << "Starting float memory scan..." << std::endl;
-    ScannerError result = scanner.ScanForFloatValue(targetValue);
-    
-    if (result == ScannerError::Success) {
-        PrintSuccess("Float memory scan completed!");
-        std::cout << "Found " << scanner.GetFloatResultCount() << " matches." << std::endl;
-    } else {
-        PrintError(result);
-    }
 }
 
 void ScanForPointers(ProcessManager& procManager, MemoryScanner& scanner) {
@@ -266,65 +269,75 @@ void ReadMemoryAddress(ProcessManager& procManager, MemoryScanner& scanner) {
     }
 }
 
-int main() {
+
+int main(int argc, char* argv[]) {
     LogToFile("[ENGINE] Starting ChimixCheatEngine engine process");
-    // Set console to handle output properly
     SetConsoleOutputCP(CP_UTF8);
     try {
-        std::cout << "ChimixCheatEngine - Simple Memory Scanner & Editor" << std::endl;
-        std::cout << "For educational and offline use only!" << std::endl;
-        PrintSeparator();
-
-        ProcessManager procManager;
-        MemoryScanner scanner(procManager.GetProcessHandle());
-
-        int choice;
-        do {
-            PrintMenu();
-            std::cin >> choice;
-
-            switch (choice) {
-                case 1:
-                    AttachToProcess(procManager);
-                    // Update scanner with new process handle
-                    scanner = MemoryScanner(procManager.GetProcessHandle());
-                    break;
-                case 2:
-                    ScanForValue(procManager, scanner);
-                    break;
-                case 3:
-                    ScanForFloatValue(procManager, scanner);
-                    break;
-                case 4:
-                    ScanForPointers(procManager, scanner);
-                    break;
-                case 5:
-                    ViewResults(scanner);
-                    break;
-                case 6:
-                    ViewFloatResults(scanner);
-                    break;
-                case 7:
-                    ViewPointerResults(scanner);
-                    break;
-                case 8:
-                    ModifyMemoryValue(procManager, scanner);
-                    break;
-                case 9:
-                    ModifyFloatMemoryValue(procManager, scanner);
-                    break;
-                case 10:
-                    ReadMemoryAddress(procManager, scanner);
-                    break;
-                case 0:
-                    std::cout << "Goodbye!" << std::endl;
-                    LogToFile("[ENGINE] Exiting ChimixCheatEngine engine process");
-                    break;
-                default:
-                    std::cout << "Invalid choice. Please try again." << std::endl;
+        // Check for server mode argument
+        bool serverMode = false;
+        for (int i = 1; i < argc; ++i) {
+            if (std::string(argv[i]) == "--server") {
+                serverMode = true;
+                break;
             }
+        }
+        if (serverMode) {
+            runServerMode();
+        } else {
+            std::cout << "ChimixCheatEngine - Simple Memory Scanner & Editor" << std::endl;
+            std::cout << "For educational and offline use only!" << std::endl;
+            PrintSeparator();
 
-        } while (choice != 0);
+            ProcessManager procManager;
+            MemoryScanner scanner(procManager.GetProcessHandle());
+
+            int choice;
+            do {
+                PrintMenu();
+                std::cin >> choice;
+
+                switch (choice) {
+                    case 1:
+                        AttachToProcess(procManager);
+                        scanner = MemoryScanner(procManager.GetProcessHandle());
+                        break;
+                    case 2:
+                        ScanForValue(procManager, scanner);
+                        break;
+                    case 3:
+                        ScanForFloatValue(procManager, scanner);
+                        break;
+                    case 4:
+                        ScanForPointers(procManager, scanner);
+                        break;
+                    case 5:
+                        ViewResults(scanner);
+                        break;
+                    case 6:
+                        ViewFloatResults(scanner);
+                        break;
+                    case 7:
+                        ViewPointerResults(scanner);
+                        break;
+                    case 8:
+                        ModifyMemoryValue(procManager, scanner);
+                        break;
+                    case 9:
+                        ModifyFloatMemoryValue(procManager, scanner);
+                        break;
+                    case 10:
+                        ReadMemoryAddress(procManager, scanner);
+                        break;
+                    case 0:
+                        std::cout << "Goodbye!" << std::endl;
+                        LogToFile("[ENGINE] Exiting ChimixCheatEngine engine process");
+                        break;
+                    default:
+                        std::cout << "Invalid choice. Please try again." << std::endl;
+                }
+            } while (choice != 0);
+        }
     } catch (const std::exception& ex) {
         LogToFile(std::string("[ENGINE][EXCEPTION] ") + ex.what());
         std::cerr << "Fatal error: " << ex.what() << std::endl;

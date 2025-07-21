@@ -48,6 +48,10 @@ let memoryEngine = null;
 let isEngineReady = false;
 let currentProcess = null;
 let scanResults = [];
+// IPC request tracking for engine <-> WebSocket
+let ipcRequestId = 1;
+const ipcRequestMap = new Map(); // id -> { ws, type }
+
 
 // Auto-updater configuration
 if (!isDev && autoUpdater) {
@@ -255,16 +259,37 @@ function startEngineBackend() {
             return;
         }
 
-        // Start the actual memory engine process
-        console.log('Starting ChimixCheatEngine at:', ENGINE_PATH);
-        
-        engineProcess = spawn(ENGINE_PATH, [], {
+        // Start the actual memory engine process in server mode for IPC
+        console.log('Starting ChimixCheatEngine in server mode at:', ENGINE_PATH);
+
+        // Pass --server flag to enable server mode in the C++ engine
+        engineProcess = spawn(ENGINE_PATH, ['--server'], {
             cwd: path.dirname(ENGINE_PATH),
             stdio: ['pipe', 'pipe', 'pipe']
         });
 
+        // Buffer for stdout lines
+        let stdoutBuffer = '';
         engineProcess.stdout.on('data', (data) => {
-            console.log('Engine stdout:', data.toString());
+            stdoutBuffer += data.toString();
+            let lines = stdoutBuffer.split(/\r?\n/);
+            stdoutBuffer = lines.pop(); // last line may be incomplete
+            for (const line of lines) {
+                if (!line.trim()) continue;
+                try {
+                    const msg = JSON.parse(line);
+                    if (msg.id && ipcRequestMap.has(msg.id)) {
+                        const { ws, type } = ipcRequestMap.get(msg.id);
+                        ws.send(JSON.stringify(msg));
+                        ipcRequestMap.delete(msg.id);
+                    } else {
+                        // Broadcast or log if not matched
+                        console.log('Engine (unmatched):', msg);
+                    }
+                } catch (e) {
+                    console.error('Failed to parse engine stdout:', line, e);
+                }
+            }
         });
 
         engineProcess.stderr.on('data', (data) => {
@@ -274,7 +299,7 @@ function startEngineBackend() {
         engineProcess.on('close', (code) => {
             console.log(`Engine process exited with code ${code}`);
             isEngineReady = false;
-            
+
             if (mainWindow) {
                 mainWindow.webContents.send('engine-status', { status: 'error', message: 'Engine process stopped' });
             }
@@ -283,7 +308,7 @@ function startEngineBackend() {
         engineProcess.on('error', (error) => {
             console.error('Failed to start engine process:', error);
             isEngineReady = false;
-            
+
             if (mainWindow) {
                 mainWindow.webContents.send('engine-status', { status: 'error', message: error.message });
             }
@@ -392,37 +417,51 @@ function startWebSocketServer() {
 }
 
 function handleWebSocketMessage(ws, data) {
-    switch (data.type) {
-        case 'attach':
-            handleProcessAttach(ws, data);
-            break;
-            
-        case 'getProcessList':
-            handleGetProcessList(ws);
-            break;
-            
-        case 'scan':
-            handleMemoryScan(ws, data);
-            break;
-            
-        case 'universalScan': // Keep for backward compatibility, redirect to regular scan
-            handleMemoryScan(ws, data);
-            break;
-            
-        case 'patternScan': // NEW: Dedicated pattern scanning
-            handlePatternScan(ws, data);
-            break;
-            
-        case 'modify':
-            handleMemoryModify(ws, data);
-            break;
-            
-        case 'ping':
-            ws.send(JSON.stringify({ type: 'pong' }));
-            break;
-            
-        default:
-            console.warn('Unknown message type:', data.type);
+    // Forward supported commands to engine if available, else fallback to mock
+    const supportedTypes = ['attach', 'getProcessList', 'scan', 'universalScan', 'patternScan', 'modify'];
+    if (isEngineReady && engineProcess && supportedTypes.includes(data.type)) {
+        // Assign a unique id for this request
+        const reqId = ipcRequestId++;
+        const msg = { ...data, id: reqId };
+        ipcRequestMap.set(reqId, { ws, type: data.type });
+        try {
+            engineProcess.stdin.write(JSON.stringify(msg) + '\n');
+        } catch (e) {
+            console.error('Failed to write to engine stdin:', e);
+            ws.send(JSON.stringify({ type: 'error', message: 'Engine communication error' }));
+            ipcRequestMap.delete(reqId);
+        }
+    } else {
+        // Fallback to mock/simulated logic for unsupported or mock mode
+        switch (data.type) {
+            case 'attach':
+                handleProcessAttach(ws, data);
+                break;
+            case 'getProcessList':
+                handleGetProcessList(ws);
+                break;
+            case 'scan':
+                handleMemoryScan(ws, data);
+                break;
+            case 'universalScan':
+                handleMemoryScan(ws, data);
+                break;
+            case 'patternScan':
+                handlePatternScan(ws, data);
+                break;
+            case 'modify':
+                handleMemoryModify(ws, data);
+                break;
+            case 'ping':
+                ws.send(JSON.stringify({ type: 'pong' }));
+                break;
+            case 'connected':
+                // Optionally log or ignore
+                // console.log('WebSocket connected');
+                break;
+            default:
+                console.warn('Unknown message type:', data.type);
+        }
     }
 }
 
