@@ -14,11 +14,18 @@ endif()
 
 # Source files
 file(GLOB_RECURSE SOURCES "*.cpp" "*.h")
-# Exclude third-party/json/docs (and subfolders) from SOURCES
+# Exclude third-party/json/docs and third-party/json/tests (and subfolders) from SOURCES
 list(FILTER SOURCES EXCLUDE REGEX "third-party/json/docs/")
+list(FILTER SOURCES EXCLUDE REGEX "third-party/json/tests/")
 
 # Create executable
+
 add_executable(ChimixEngine ${SOURCES})
+
+# If using the subdirectory fallback, add the include path for nlohmann/json.hpp
+if(NOT nlohmann_json_FOUND)
+    target_include_directories(ChimixEngine PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third-party/json/include)
+endif()
 
 # Link libraries
 if(nlohmann_json_FOUND)
