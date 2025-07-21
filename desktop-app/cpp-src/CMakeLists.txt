@@ -14,6 +14,8 @@ endif()
 
 # Source files
 file(GLOB_RECURSE SOURCES "*.cpp" "*.h")
+# Exclude third-party/json/docs (and subfolders) from SOURCES
+list(FILTER SOURCES EXCLUDE REGEX "third-party/json/docs/")
 
 # Create executable
 add_executable(ChimixEngine ${SOURCES})
