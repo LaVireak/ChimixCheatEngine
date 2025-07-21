@@ -9,9 +9,7 @@ on:
 jobs:
   build:
     runs-on: windows-latest
-    defaults:
-      run:
-        shell: mingw64 {0}
+    # Remove global shell override; use default shell
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -26,7 +24,8 @@ jobs:
 
 
       - name: Build C++ engine
+        shell: msys2 {0}
         run: |
-          ./build.sh
+          mingw64.exe -c './build.sh'
 
       # Add more steps as needed, e.g., test, package, upload artifacts
