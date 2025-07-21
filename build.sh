@@ -3,8 +3,10 @@ set -e
 
 echo "Building ChimixCheatEngine with MSYS2 MinGW64..."
 
-# Create output directory
+
+# Create output directories
 mkdir -p build
+mkdir -p desktop-app/build
 
 # Compile with g++ (MSYS2 MinGW64)
 g++ -std=c++17 -DUNICODE -D_UNICODE \
