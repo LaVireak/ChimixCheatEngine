@@ -40,9 +40,10 @@ jobs:
           npm install
 
       - name: Build C++ engine
+        shell: pwsh
         run: |
           cd desktop-app/cpp-src
-          if not exist build mkdir build
+          if (!(Test-Path "build")) { New-Item -ItemType Directory -Path "build" }
           cd build
           cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
           cmake --build .
