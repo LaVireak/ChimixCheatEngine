@@ -9,24 +9,12 @@ on:
 jobs:
   build:
     runs-on: windows-latest
-    # Remove global shell override; use default shell
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up MSYS2
-        uses: msys2/setup-msys2@v2
-        with:
-          update: true
-          install: >-
-            mingw-w64-x86_64-toolchain
-            mingw-w64-x86_64-nlohmann-json
-            mingw-w64-x86_64-cmake
-
-
       - name: Build C++ engine
-        shell: msys2 {0}
         run: |
-          bash -lc './build.sh'
+          desktop-app\\build.bat
 
       # Add more steps as needed, e.g., test, package, upload artifacts
