@@ -10,6 +10,7 @@ echo Compiling with g++...
 REM Compile with MinGW g++
 g++ -std=c++17 -DUNICODE -D_UNICODE ^
     -I"../cpp-src" ^
+    -I"../cpp-src/nlohmann" ^
     -I"." ^
     cpp-src\main.cpp ^
     cpp-src\ProcessManager.cpp ^
