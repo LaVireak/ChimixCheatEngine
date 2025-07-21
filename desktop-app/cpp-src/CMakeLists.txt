@@ -23,11 +23,7 @@ file(GLOB_RECURSE SOURCES "*.cpp" "*.h")
 # Exclude unwanted files and folders from SOURCES
 list(FILTER SOURCES EXCLUDE REGEX "third-party/json/docs/")
 list(FILTER SOURCES EXCLUDE REGEX "third-party/json/tests/")
-list(FILTER SOURCES EXCLUDE REGEX "third-party/json/cmake/")
-list(FILTER SOURCES EXCLUDE REGEX "third-party/json/tools/")
-list(FILTER SOURCES EXCLUDE REGEX "CMakeFiles/")
 
-# Create executable
 
 add_executable(ChimixEngine ${SOURCES})
 
