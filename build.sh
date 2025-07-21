@@ -10,6 +10,7 @@ mkdir -p build
 g++ -std=c++17 -DUNICODE -D_UNICODE \
     -I"desktop-app/cpp-src" \
     -I"desktop-app" \
+    -I"cpp-src/nlohmann" \
     desktop-app/cpp-src/main.cpp \
     desktop-app/cpp-src/ProcessManager.cpp \
     desktop-app/cpp-src/MemoryScanner.cpp \

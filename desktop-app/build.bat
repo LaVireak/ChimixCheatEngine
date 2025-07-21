@@ -11,6 +11,7 @@ REM Compile with MinGW g++
 g++ -std=c++17 -DUNICODE -D_UNICODE ^
     -I"desktop-app/cpp-src" ^
     -I"desktop-app" ^
+    -I"..\cpp-src\nlohmann" ^
     cpp-src\main.cpp ^
     cpp-src\ProcessManager.cpp ^
     cpp-src\MemoryScanner.cpp ^
