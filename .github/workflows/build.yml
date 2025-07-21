@@ -25,16 +25,14 @@ jobs:
           msystem: MINGW64
           install: mingw-w64-x86_64-gcc mingw-w64-x86_64-cmake
 
-      - name: Install nlohmann/json
+      - name: Ensure third-party directory exists
+        shell: pwsh
         run: |
-          if not exist desktop-app\cpp-src\third-party mkdir desktop-app\cpp-src\third-party
-          cd desktop-app/cpp-src/third-party
-          git clone --depth 1 https://github.com/nlohmann/json.git
+          if (!(Test-Path "desktop-app/third-party")) { New-Item -ItemType Directory -Path "desktop-app/third-party" }
 
-      - name: Copy nlohmann/json.hpp
+      - name: Clone nlohmann/json
         run: |
-          if not exist desktop-app\include\nlohmann mkdir desktop-app\include\nlohmann
-          copy desktop-app\cpp-src\third-party\json\single_include\nlohmann\json.hpp desktop-app\include\nlohmann\json.hpp
+          git clone --depth 1 https://github.com/nlohmann/json.git desktop-app/third-party/json
 
       - name: Install dependencies
         run: |
