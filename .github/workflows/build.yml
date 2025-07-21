@@ -24,9 +24,6 @@ jobs:
             mingw-w64-x86_64-toolchain
             mingw-w64-x86_64-nlohmann-json
 
-      - name: Install dependencies
-        run: |
-          pacman -Sy --noconfirm mingw-w64-x86_64-nlohmann-json
 
       - name: Build C++ engine
         run: |
