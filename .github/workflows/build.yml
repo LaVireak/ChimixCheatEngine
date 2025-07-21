@@ -27,9 +27,14 @@ jobs:
 
       - name: Install nlohmann/json
         run: |
-          mkdir desktop-app/cpp-src/third-party
+          if not exist desktop-app\cpp-src\third-party mkdir desktop-app\cpp-src\third-party
           cd desktop-app/cpp-src/third-party
           git clone --depth 1 https://github.com/nlohmann/json.git
+
+      - name: Copy nlohmann/json.hpp
+        run: |
+          if not exist desktop-app\include\nlohmann mkdir desktop-app\include\nlohmann
+          copy desktop-app\cpp-src\third-party\json\single_include\nlohmann\json.hpp desktop-app\include\nlohmann\json.hpp
 
       - name: Install dependencies
         run: |
@@ -39,7 +44,7 @@ jobs:
       - name: Build C++ engine
         run: |
           cd desktop-app/cpp-src
-          mkdir build
+          if not exist build mkdir build
           cd build
           cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
           cmake --build .
