@@ -1,23 +1,7 @@
 
+
 cmake_minimum_required(VERSION 3.16)
 project(ChimixEngine)
-
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-# Add nlohmann/json include path (header-only)
-include_directories(${CMAKE_SOURCE_DIR}/../include)
-
-# Source files
-file(GLOB_RECURSE SOURCES "*.cpp" "*.h")
-
-# Create executable
-add_executable(ChimixEngine ${SOURCES})
-
-# Windows specific
-if(WIN32)
-    target_link_libraries(ChimixEngine PRIVATE psapi)
-endif()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -25,7 +9,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Add nlohmann/json
 find_package(nlohmann_json 3.11.0 QUIET)
 if(NOT nlohmann_json_FOUND)
-    add_subdirectory(third-party/json)
+    add_subdirectory(${CMAKE_SOURCE_DIR}/../third-party/json third-party/json)
 endif()
 
 # Source files
