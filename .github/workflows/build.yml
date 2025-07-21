@@ -30,7 +30,6 @@ jobs:
 
       - name: Build C++ engine
         run: |
-          cd desktop-app
-          ./build.bat
+          bash ./build.sh
 
       # Add more steps as needed, e.g., test, package, upload artifacts
