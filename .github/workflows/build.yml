@@ -28,11 +28,11 @@ jobs:
       - name: Ensure third-party directory exists
         shell: pwsh
         run: |
-          if (!(Test-Path "desktop-app/third-party")) { New-Item -ItemType Directory -Path "desktop-app/third-party" }
+          if (!(Test-Path "desktop-app/cpp-src/third-party")) { New-Item -ItemType Directory -Path "desktop-app/cpp-src/third-party" }
 
       - name: Clone nlohmann/json
         run: |
-          git clone --depth 1 https://github.com/nlohmann/json.git desktop-app/third-party/json
+          git clone --depth 1 https://github.com/nlohmann/json.git desktop-app/cpp-src/third-party/json
 
       - name: Install dependencies
         run: |
