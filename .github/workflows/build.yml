@@ -19,8 +19,9 @@ jobs:
           choco install mingw -y
 
       - name: Build C++ engine
+        working-directory: desktop-app
         run: |
           set "PATH=C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin;%PATH%"
-          desktop-app\build.bat
+          build.bat
 
       # Add more steps as needed, e.g., test, package, upload artifacts
