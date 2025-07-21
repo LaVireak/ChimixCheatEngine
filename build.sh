@@ -10,6 +10,7 @@ mkdir -p desktop-app/build
 
 # Compile with g++ (MSYS2 MinGW64)
 g++ -std=c++17 -DUNICODE -D_UNICODE \
+    -I"/mingw64/include" \
     -I"desktop-app/cpp-src" \
     -I"desktop-app" \
     desktop-app/cpp-src/main.cpp \
