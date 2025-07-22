@@ -4,11 +4,7 @@
 #include "ProcessManager.h"
 #include "MemoryScanner.h"
 #include "Utils.h"
-#if __has_include(<nlohmann/json.hpp>)
-#include <nlohmann/json.hpp>
-#else
-#include <nlohmann/json.hpp>
-#endif
+#include "nlohmann/json.hpp"
 #include <iostream>
 #include <string>
 

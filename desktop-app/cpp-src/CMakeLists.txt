@@ -22,6 +22,8 @@ list(FILTER SOURCES EXCLUDE REGEX ".*/build/.*")
 list(FILTER SOURCES EXCLUDE REGEX ".*/_deps/.*")
 list(FILTER SOURCES EXCLUDE REGEX ".*/third-party/.*")
 list(FILTER SOURCES EXCLUDE REGEX ".*/dist-new/.*")
+list(FILTER SOURCES EXCLUDE REGEX ".*/CMakeFiles/.*")
+list(FILTER SOURCES EXCLUDE REGEX ".*/CMakeCXXCompilerId.cpp$")
 list(FILTER SOURCES EXCLUDE REGEX ".*/test_json.cpp$")
 
 
@@ -33,7 +35,7 @@ target_include_directories(ChimixEngine PRIVATE "d:/Side Quest/ChimixCheatEngine
 
 # No need to link nlohmann_json as a library; it's header-only.
 
-# Windows specific
-if(WIN32)
-    target_link_libraries(ChimixEngine PRIVATE psapi)
+# MinGW specific settings
+if(MINGW)
+    # Add any MinGW-specific libraries or flags here if needed
 endif()
