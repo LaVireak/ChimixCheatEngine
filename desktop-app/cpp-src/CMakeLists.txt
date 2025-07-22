@@ -1,13 +1,19 @@
 
 
-cmake_minimum_required(VERSION 3.16)
-project(ChimixEngine)
+
+cmake_minimum_required(VERSION 3.11)
+project(ChimixEngine LANGUAGES CXX)
+
+include(FetchContent)
+FetchContent_Declare(json
+    URL https://github.com/nlohmann/json/releases/download/v3.12.0/json.tar.xz
+)
+FetchContent_MakeAvailable(json)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-## Use local single-header nlohmann/json (include/nlohmann/json.hpp)
-## No CMake logic needed; just ensure the include path is correct.
+
 
 
 # Source files: only from cpp-src, exclude build, _deps, third-party, dist-new, etc.
@@ -27,13 +33,12 @@ list(FILTER SOURCES EXCLUDE REGEX ".*/CMakeCXXCompilerId.cpp$")
 list(FILTER SOURCES EXCLUDE REGEX ".*/test_json.cpp$")
 
 
+
 add_executable(ChimixEngine ${SOURCES})
+target_link_libraries(ChimixEngine PRIVATE nlohmann_json::nlohmann_json)
 
 
-# Use the absolute path for the include directory
-target_include_directories(ChimixEngine PRIVATE "d:/Side Quest/ChimixCheatEngine/desktop-app/include")
 
-# No need to link nlohmann_json as a library; it's header-only.
 
 # MinGW specific settings
 if(MINGW)

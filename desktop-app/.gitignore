@@ -1,7 +1,0 @@
-# Build artifacts
-desktop-app/dist-new/
-desktop-app/dist/
-*.exe
-*.blockmap
-*.yaml
-*.yml
