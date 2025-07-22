@@ -29,5 +29,7 @@ target_link_libraries(ChimixEngine PRIVATE nlohmann_json::nlohmann_json)
 
 # MinGW specific settings (if any)
 if(MINGW)
-    # Add any MinGW-specific libraries or flags here if needed
+    # Link to psapi and enable static linking for Windows compatibility
+    target_link_libraries(ChimixEngine PRIVATE psapi)
+    set_target_properties(ChimixEngine PROPERTIES LINK_FLAGS "-static")
 endif()
