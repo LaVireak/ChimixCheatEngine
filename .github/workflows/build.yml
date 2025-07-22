@@ -39,6 +39,7 @@ jobs:
           cd desktop-app
           npm install
 
+
       - name: Build C++ engine
         shell: pwsh
         run: |
@@ -47,6 +48,11 @@ jobs:
           cd build
           cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
           cmake --build .
+
+      - name: Copy C++ binary for Electron packaging
+        shell: pwsh
+        run: |
+          Copy-Item -Path "desktop-app/cpp-src/build/ChimixCheatEngine.exe" -Destination "desktop-app/build/ChimixCheatEngine.exe" -Force
 
       - name: Build Electron app
         run: |
