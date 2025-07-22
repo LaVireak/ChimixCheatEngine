@@ -65,6 +65,8 @@ jobs:
           Rename-Item -Path "desktop-app/build/ChimixEngine.exe" -NewName "ChimixCheatEngine.exe" -Force
 
       - name: Build Electron app
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           cd desktop-app
           npm run build
