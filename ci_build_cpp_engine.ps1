@@ -20,4 +20,10 @@ $repoRoot = Resolve-Path "$PSScriptRoot/../.."
 $targetDir = Join-Path $repoRoot "desktop-app/build"
 if (!(Test-Path $targetDir)) { New-Item -ItemType Directory -Path $targetDir | Out-Null }
 $targetPath = Join-Path $targetDir "ChimixCheatEngine.exe"
-Copy-Item -Path "build/ChimixCheatEngine.exe" -Destination $targetPath -Force
+Write-Host "Copying from: build/ChimixCheatEngine.exe to: $targetPath"
+if (Test-Path "build/ChimixCheatEngine.exe") {
+    Copy-Item -Path "build/ChimixCheatEngine.exe" -Destination $targetPath -Force
+    Write-Host "Copy succeeded."
+} else {
+    Write-Host "ERROR: Source binary not found at build/ChimixCheatEngine.exe."
+}
