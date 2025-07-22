@@ -25,6 +25,12 @@ add_executable(ChimixEngine
     Utils.cpp
 )
 
+# Ensure the include directory for nlohmann/json.hpp is available
+target_include_directories(ChimixEngine PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../include
+    ${CMAKE_CURRENT_SOURCE_DIR}/../include
+)
+
 target_link_libraries(ChimixEngine PRIVATE nlohmann_json::nlohmann_json)
 
 # MinGW specific settings (if any)
