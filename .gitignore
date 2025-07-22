@@ -1,49 +1,50 @@
 # Ignore build artifacts and large files
-build/
+/build/
+/cpp-src/build/
 dist/
+desktop-app/dist/
+desktop-app/dist-new/
 node_modules/
+
+# CMake build files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+*.cmake
+
+# Compiled executables and libraries
 *.exe
 *.dll
-*.zip
-*.msi
-*.bin
-*.obj
+*.so
 *.a
 *.lib
+*.obj
+*.o
 *.pdb
-*.so
-*.dylib
-*.class
-*.jar
-*.war
-*.ear
-*.pyc
-*.pyo
-*.ipynb
-*.swp
-*.swo
-*.swn
-*.lock
-*.cache
+*.bin
+
+# IDE and editor files
+.vscode/
+.idea/
+
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Temporary files
+*.tmp
 *.log
-*.db
-*.sqlite
-*.csv
-*.pdf
-*.mp4
-*.mov
-*.avi
-*.mkv
-*.flv
-*.mp3
-*.wav
-*.ogg
-desktop-app/dist-new/
-desktop-app/dist/
-*.blockmap
-*.yaml
-*.yml
-*.flac
+*.cache
+*.lock
+
+# Archive files
+*.zip
+*.rar
+*.7z
+
+# Media files
 *.jpg
 *.jpeg
 *.png
@@ -54,47 +55,50 @@ desktop-app/dist/
 *.psd
 *.ai
 *.eps
+*.flac
+*.mp3
+*.wav
+*.ogg
+*.mp4
+*.mov
+*.avi
+*.mkv
+
+# Fonts
 *.ttf
 *.otf
 *.woff
 *.woff2
 *.eot
-CMakeFiles/
-_deps/
-# Build artifacts
-*.exe
-*.obj
-*.o
-build/
-dist/
-desktop-app/dist/
-desktop-app/dist-new/
+
+# Windows specific
+Thumbs.db
+Desktop.ini
+
+# Python
+*.pyc
+*.pyo
+
+# Misc
+*.ipynb
+*.swo
+*.swp
+*.swn
+*.db
+*.sqlite
+*.csv
+*.pdf
+
+# Electron/packager
 *.blockmap
 *.yaml
 *.yml
-!desktop-app/build/*.exe
 
-# Node.js dependencies
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# Exceptions
+!desktop-app/build/*.exe
 
 # Package lock files are needed for CI/CD
 # package-lock.json
 
 # VS Code settings (optional - remove if you want to keep them)
 .vscode/
-
-# Windows specific
-Thumbs.db
-Desktop.ini
-
-# Temporary files
-*.tmp
-*.log
-
-# Archive files
-*.zip
-*.rar
-*.7z
