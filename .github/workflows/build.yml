@@ -59,6 +59,11 @@ jobs:
         run: |
           Copy-Item -Path "desktop-app/cpp-src/build/ChimixEngine.exe" -Destination "desktop-app/build/ChimixEngine.exe" -Force
 
+      - name: Rename C++ binary for Electron packaging
+        shell: pwsh
+        run: |
+          Rename-Item -Path "desktop-app/build/ChimixEngine.exe" -NewName "ChimixCheatEngine.exe" -Force
+
       - name: Build Electron app
         run: |
           cd desktop-app
