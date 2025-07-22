@@ -52,7 +52,7 @@ jobs:
       - name: Copy C++ binary for Electron packaging
         shell: pwsh
         run: |
-          Copy-Item -Path "desktop-app/cpp-src/build/ChimixCheatEngine.exe" -Destination "desktop-app/build/ChimixCheatEngine.exe" -Force
+          Copy-Item -Path "desktop-app/cpp-src/build/ChimixEngine.exe" -Destination "desktop-app/build/ChimixEngine.exe" -Force
 
       - name: Build Electron app
         run: |
