@@ -29,12 +29,8 @@ add_executable(ChimixEngine ${SOURCES})
 
 # If using the subdirectory fallback, add the include path for nlohmann/json.hpp
 
-# Always add the local include path for nlohmann/json.hpp
+# Always add the parent directory of nlohmann/json.hpp
 target_include_directories(ChimixEngine PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../include)
-
-if(NOT nlohmann_json_FOUND)
-    target_include_directories(ChimixEngine PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/third-party/json/include)
-endif()
 
 # Link libraries
 if(nlohmann_json_FOUND)
