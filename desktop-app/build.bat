@@ -1,22 +1,23 @@
 @echo off
 echo Building ChimixCheatEngine with MinGW...
-echo.
+@echo off
+setlocal
 
-REM Create output directory
-if not exist build mkdir build
+echo Building C++ engine...
 
-echo Compiling with g++...
+REM Create build directory if it doesn't exist
+if not exist "cpp-src\build" mkdir cpp-src\build
+cd cpp-src\build
 
-REM Compile with MinGW g++
-g++ -std=c++17 -DUNICODE -D_UNICODE ^
-    -I"desktop-app/cpp-src" ^
-    -I"desktop-app" ^
-    -I"..\cpp-src\nlohmann" ^
-    cpp-src\main.cpp ^
-    cpp-src\ProcessManager.cpp ^
-    cpp-src\MemoryScanner.cpp ^
-    cpp-src\Utils.cpp ^
-    -lkernel32 -luser32 -ladvapi32 -lpsapi ^
+REM Generate project files with CMake
+cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
+
+REM Build the project
+cmake --build .
+
+cd ../..
+echo Build completed!
+endlocal
     -o build\ChimixCheatEngine.exe
 
 if errorlevel 1 (

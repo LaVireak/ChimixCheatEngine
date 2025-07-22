@@ -1,9 +1,14 @@
+
 #include <windows.h>
 #include "../include/Common.h"
 #include "ProcessManager.h"
 #include "MemoryScanner.h"
 #include "Utils.h"
+#if __has_include(<nlohmann/json.hpp>)
 #include <nlohmann/json.hpp>
+#else
+#include <nlohmann/json.hpp>
+#endif
 #include <iostream>
 #include <string>
 
@@ -18,14 +23,6 @@ void ScanForValue(ProcessManager& procManager, MemoryScanner& scanner) {
 void ScanForFloatValue(ProcessManager& procManager, MemoryScanner& scanner) {
     // Float scan logic not implemented in this release.
 }
-#include "../include/Common.h"
-#include "ProcessManager.h"
-#include "MemoryScanner.h"
-
-#include "Utils.h"
-#include <nlohmann/json.hpp>
-#include <iostream>
-#include <string>
 
 using json = nlohmann::json;
 

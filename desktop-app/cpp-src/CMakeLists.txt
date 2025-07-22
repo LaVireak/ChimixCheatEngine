@@ -6,38 +6,32 @@ project(ChimixEngine)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Add nlohmann/json
-find_package(nlohmann_json 3.11.0 QUIET)
-if(NOT nlohmann_json_FOUND)
-    include(FetchContent)
-    FetchContent_Declare(
-        nlohmann_json
-        GIT_REPOSITORY https://github.com/nlohmann/json.git
-        GIT_TAG v3.11.0
-    )
-    FetchContent_MakeAvailable(nlohmann_json)
-endif()
+## Use local single-header nlohmann/json (include/nlohmann/json.hpp)
+## No CMake logic needed; just ensure the include path is correct.
 
-# Source files
-file(GLOB_RECURSE SOURCES "*.cpp" "*.h")
-# Exclude unwanted files and folders from SOURCES
-list(FILTER SOURCES EXCLUDE REGEX "third-party/json/docs/")
-list(FILTER SOURCES EXCLUDE REGEX "third-party/json/tests/")
+
+# Source files: only from cpp-src, exclude build, _deps, third-party, dist-new, etc.
+
+
+# Build all project source files except test_json.cpp
+file(GLOB_RECURSE SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.h
+)
+list(FILTER SOURCES EXCLUDE REGEX ".*/build/.*")
+list(FILTER SOURCES EXCLUDE REGEX ".*/_deps/.*")
+list(FILTER SOURCES EXCLUDE REGEX ".*/third-party/.*")
+list(FILTER SOURCES EXCLUDE REGEX ".*/dist-new/.*")
+list(FILTER SOURCES EXCLUDE REGEX ".*/test_json.cpp$")
 
 
 add_executable(ChimixEngine ${SOURCES})
 
-# If using the subdirectory fallback, add the include path for nlohmann/json.hpp
 
-# Always add the parent directory of nlohmann/json.hpp
-target_include_directories(ChimixEngine PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../include)
+# Use the absolute path for the include directory
+target_include_directories(ChimixEngine PRIVATE "d:/Side Quest/ChimixCheatEngine/desktop-app/include")
 
-# Link libraries
-if(nlohmann_json_FOUND)
-    target_link_libraries(ChimixEngine PRIVATE nlohmann_json::nlohmann_json)
-else()
-    target_link_libraries(ChimixEngine PRIVATE nlohmann_json)
-endif()
+# No need to link nlohmann_json as a library; it's header-only.
 
 # Windows specific
 if(WIN32)
