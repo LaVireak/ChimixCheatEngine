@@ -16,5 +16,8 @@ $cppFiles = (Get-ChildItem -Path "desktop-app/cpp-src" -Filter *.cpp | ForEach-O
 Invoke-Expression "g++ -std=c++17 -O2 -Idesktop-app/include $cppFiles -o build/ChimixCheatEngine.exe -lpsapi -static"
 
 # Copy the built binary to desktop-app/build for Electron packaging
-if (!(Test-Path "../../build")) { New-Item -ItemType Directory -Path "../../build" | Out-Null }
-Copy-Item -Path "build/ChimixCheatEngine.exe" -Destination "../../build/ChimixCheatEngine.exe" -Force
+$repoRoot = Resolve-Path "$PSScriptRoot/../.."
+$targetDir = Join-Path $repoRoot "desktop-app/build"
+if (!(Test-Path $targetDir)) { New-Item -ItemType Directory -Path $targetDir | Out-Null }
+$targetPath = Join-Path $targetDir "ChimixCheatEngine.exe"
+Copy-Item -Path "build/ChimixCheatEngine.exe" -Destination $targetPath -Force
