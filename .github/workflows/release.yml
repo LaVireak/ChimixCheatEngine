@@ -44,7 +44,7 @@ jobs:
         shell: msys2 {0}
         run: |
           mkdir -p build
-          g++ -std=c++17 -O2 cpp-src/*.cpp -o build/ChimixCheatEngine.exe -lpsapi -static
+          g++ -std=c++17 -O2 -Iinclude cpp-src/*.cpp -o build/ChimixCheatEngine.exe -lpsapi -static
 
       - name: Build Electron app
         working-directory: desktop-app
