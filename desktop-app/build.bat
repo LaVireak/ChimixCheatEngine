@@ -10,7 +10,7 @@ if not exist "cpp-src\build" mkdir cpp-src\build
 cd cpp-src\build
 
 REM Generate project files with CMake
-cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
+cmake "d:/Side Quest/ChimixCheatEngine/desktop-app/cpp-src" -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
 
 REM Build the project
 cmake --build .
@@ -18,7 +18,6 @@ cmake --build .
 cd ../..
 echo Build completed!
 endlocal
-    -o build\ChimixCheatEngine.exe
 
 if errorlevel 1 (
     echo.
