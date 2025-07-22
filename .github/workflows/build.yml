@@ -49,6 +49,11 @@ jobs:
           cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
           cmake --build .
 
+      - name: Ensure Electron packaging directory exists
+        shell: pwsh
+        run: |
+          if (!(Test-Path "desktop-app/build")) { New-Item -ItemType Directory -Path "desktop-app/build" }
+
       - name: Copy C++ binary for Electron packaging
         shell: pwsh
         run: |
