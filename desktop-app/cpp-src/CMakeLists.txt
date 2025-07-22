@@ -25,6 +25,9 @@ add_executable(ChimixEngine
 
 target_link_libraries(ChimixEngine PRIVATE nlohmann_json::nlohmann_json)
 
+# Ensure the target can find nlohmann/json.hpp
+target_include_directories(ChimixEngine PRIVATE ${nlohmann_json_SOURCE_DIR}/include)
+
 # MinGW specific settings (if any)
 if(MINGW)
     # Add any MinGW-specific libraries or flags here if needed
