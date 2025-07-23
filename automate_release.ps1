@@ -21,17 +21,9 @@ Write-Host "Running installer build script..."
 
 # Find installer file(s) in output directory (commonly .exe or .msi)
 
-# Find installer file(s) in output directory (commonly .exe or .msi)
-$installerFiles = Get-ChildItem -Path $installerOutputDir -Include *.msi,*.exe -File | Where-Object { $_.Name -ne 'ChimixCheatEngine.exe' }
-# Find installer file(s) in dist directory (UI installer)
+ # Only copy the latest ChimixCheatEngine-*-Setup.exe from dist to release
 $distDir = Join-Path $workspaceRoot 'desktop-app\dist'
-$distInstallers = @()
 if (Test-Path $distDir) {
-    $distInstallers = Get-ChildItem -Path $distDir -Include *Setup.exe,*Portable.exe -File
-}
-
-if ($installerFiles.Count -eq 0 -and $distInstallers.Count -eq 0) {
-    # Always copy the latest ChimixCheatEngine-*-Setup.exe from dist to release
     $latestSetup = Get-ChildItem -Path $distDir -Filter 'ChimixCheatEngine-*-Setup.exe' -File | Sort-Object LastWriteTime -Descending | Select-Object -First 1
     if ($null -ne $latestSetup) {
         $dest = Join-Path $releaseDir $latestSetup.Name
@@ -43,17 +35,6 @@ if ($installerFiles.Count -eq 0 -and $distInstallers.Count -eq 0) {
         exit 1
     }
 } else {
-    # Move installer(s) to release directory from build output
-    foreach ($file in $installerFiles) {
-        $dest = Join-Path $releaseDir $file.Name
-        Move-Item -Path $file.FullName -Destination $dest -Force
-        Write-Host "Moved $($file.Name) to release folder."
-    }
-    # Move installer(s) to release directory from dist output
-    foreach ($file in $distInstallers) {
-        $dest = Join-Path $releaseDir $file.Name
-        Copy-Item -Path $file.FullName -Destination $dest -Force
-        Write-Host "Copied $($file.Name) from dist to release folder."
-    }
-    Write-Host "Automation complete. Installer(s) are now in the release folder."
+    Write-Error "Dist directory does not exist. Please check your build process."
+    exit 1
 }
