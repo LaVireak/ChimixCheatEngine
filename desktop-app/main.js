@@ -143,13 +143,35 @@ if (autoUpdater) {
 }
 
 // Paths
-const ENGINE_PATH = isDev 
-    ? path.join(__dirname, 'build', 'ChimixCheatEngine.exe')
-    : path.join(process.resourcesPath, 'engine', 'ChimixCheatEngine.exe');
 
-console.log('Development mode:', isDev);
-console.log('Engine path:', ENGINE_PATH);
-console.log('Engine exists:', fs.existsSync(ENGINE_PATH));
+let ENGINE_PATH;
+if (isDev) {
+    ENGINE_PATH = path.join(__dirname, 'build', 'ChimixCheatEngine.exe');
+    console.log('Development mode:', isDev);
+    console.log('Engine path:', ENGINE_PATH);
+    console.log('Engine exists:', fs.existsSync(ENGINE_PATH));
+} else {
+    // Try multiple possible locations for the engine binary in production
+    const possiblePaths = [
+        path.join(process.resourcesPath, 'engine', 'ChimixCheatEngine.exe'),
+        path.join(app.getAppPath(), 'engine', 'ChimixCheatEngine.exe'),
+        path.join(process.resourcesPath, 'ChimixCheatEngine.exe'),
+        path.join(app.getAppPath(), 'ChimixCheatEngine.exe'),
+    ];
+    ENGINE_PATH = possiblePaths.find(p => fs.existsSync(p));
+    console.log('Production mode:', !isDev);
+    console.log('Attempting engine paths:');
+    possiblePaths.forEach(p => {
+        console.log('  ', p, 'exists:', fs.existsSync(p));
+    });
+    if (!ENGINE_PATH) {
+        // Fallback to default if none found (will trigger mock mode)
+        ENGINE_PATH = path.join(process.resourcesPath, 'engine', 'ChimixCheatEngine.exe');
+        console.warn('No engine binary found in any expected location. Will run in mock mode.');
+    } else {
+        console.log('Selected engine path:', ENGINE_PATH);
+    }
+}
 
 // App configuration
 const APP_CONFIG = {
