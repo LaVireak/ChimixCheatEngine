@@ -151,6 +151,10 @@ if (isDev) {
     console.log('Engine path:', ENGINE_PATH);
     console.log('Engine exists:', fs.existsSync(ENGINE_PATH));
 } else {
+    // Debug: Log resource and app paths
+    console.log('Production mode:', !isDev);
+    console.log('process.resourcesPath:', process.resourcesPath);
+    console.log('app.getAppPath():', app.getAppPath());
     // Try multiple possible locations for the engine binary in production
     const possiblePaths = [
         path.join(process.resourcesPath, 'engine', 'ChimixCheatEngine.exe'),
@@ -159,7 +163,6 @@ if (isDev) {
         path.join(app.getAppPath(), 'ChimixCheatEngine.exe'),
     ];
     ENGINE_PATH = possiblePaths.find(p => fs.existsSync(p));
-    console.log('Production mode:', !isDev);
     console.log('Attempting engine paths:');
     possiblePaths.forEach(p => {
         console.log('  ', p, 'exists:', fs.existsSync(p));
