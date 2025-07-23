@@ -178,7 +178,7 @@ if (isDev) {
 
 // App configuration
 const APP_CONFIG = {
-    name: 'ChimixCheatEngine',
+    name: 'ChimixCheatEngine v1.0.14', // Name now includes version
     version: '1.0.14',
     width: 1200,
     height: 800,
@@ -208,7 +208,7 @@ function createWindow() {
             webSecurity: !isDev
         },
         icon: path.join(__dirname, 'assets', 'icon.png'),
-        title: APP_CONFIG.name,
+        title: `${APP_CONFIG.name} (${APP_CONFIG.version})`, // Show version in window title
         titleBarStyle: 'default',
         show: false, // Don't show until ready
         frame: true,
@@ -880,8 +880,8 @@ function createMenu() {
                     click: () => {
                         dialog.showMessageBox(mainWindow, {
                             type: 'info',
-                            title: 'About ChimixCheatEngine',
-                            message: APP_CONFIG.name,
+                            title: `About ${APP_CONFIG.name}`,
+                            message: `${APP_CONFIG.name}`,
                             detail: `Version: ${APP_CONFIG.version}\n\nA beautiful memory scanner for educational purposes.\n\n⚠️ For educational use only!\nNever use on online/multiplayer games.`,
                             icon: path.join(__dirname, 'assets', 'icon.png')
                         });
