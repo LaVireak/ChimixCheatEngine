@@ -898,13 +898,48 @@ function createMenu() {
 function cleanup() {
     // Stop engine process
     if (engineProcess && !engineProcess.killed) {
-        engineProcess.kill();
+        try {
+            engineProcess.kill('SIGKILL');
+        } catch (e) {
+            console.error('Error killing engineProcess:', e);
+        }
+        engineProcess = null;
     }
-    
+
+    // Stop any other child processes
+    if (currentProcess && !currentProcess.killed) {
+        try {
+            currentProcess.kill('SIGKILL');
+        } catch (e) {
+            console.error('Error killing currentProcess:', e);
+        }
+        currentProcess = null;
+    }
+
+    if (memoryEngine && typeof memoryEngine.kill === 'function' && !memoryEngine.killed) {
+        try {
+            memoryEngine.kill('SIGKILL');
+        } catch (e) {
+            console.error('Error killing memoryEngine:', e);
+        }
+        memoryEngine = null;
+    }
+
     // Stop WebSocket server
     if (wsServer) {
-        wsServer.close();
+        try {
+            wsServer.close();
+        } catch (e) {
+            console.error('Error closing wsServer:', e);
+        }
+        wsServer = null;
     }
+
+    // Clear timers if any (add your timer variables here)
+    // if (someTimer) {
+    //     clearTimeout(someTimer);
+    //     someTimer = null;
+    // }
 }
 
 // App event handlers
