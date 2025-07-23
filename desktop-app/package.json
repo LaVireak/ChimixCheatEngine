@@ -13,7 +13,8 @@
   "scripts": {
     "start": "electron .",
     "dev": "electron . --dev",
-    "build": "electron-builder",
+    "build": "npm run build-cpp && electron-builder",
+    "build-cpp": "cmd.exe /c \"build.bat\"",
     "build-win": "electron-builder --win",
     "build-mac": "electron-builder --mac",
     "build-linux": "electron-builder --linux",
@@ -44,12 +45,6 @@
       "node_modules/electron/**/*"
     ],
     "extraResources": [
-      {
-        "from": "build/ChimixCheatEngine.exe",
-        "to": "engine/ChimixCheatEngine.exe"
-      }
-    ],
-    "extraFiles": [
       {
         "from": "build/ChimixCheatEngine.exe",
         "to": "engine/ChimixCheatEngine.exe"

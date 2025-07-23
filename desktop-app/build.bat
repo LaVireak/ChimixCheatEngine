@@ -36,28 +36,23 @@ cd /d "%SCRIPT_DIR%"
 echo.
 echo Build completed successfully!
 echo Executable created: %BUILD_DIR%\ChimixEngine.exe
+REM Ensure build directory exists in desktop-app
+if not exist "%SCRIPT_DIR%build" mkdir "%SCRIPT_DIR%build"
+REM Copy the binary from cpp-src/build/ChimixEngine.exe to build/ChimixCheatEngine.exe
+set TARGET_BIN=%SCRIPT_DIR%build\ChimixCheatEngine.exe
+if exist "%BUILD_DIR%\ChimixEngine.exe" (
+    if exist "%TARGET_BIN%" del "%TARGET_BIN%"
+    copy /Y "%BUILD_DIR%\ChimixEngine.exe" "%TARGET_BIN%"
+    echo Copied binary to: %TARGET_BIN%
+) else (
+    echo ERROR: Source binary not found at %BUILD_DIR%\ChimixEngine.exe
+    exit /b 1
+)
 echo To run: Use 'npm start' to launch the desktop app
 endlocal
 
-REM Build the project
-cmake --build .
-
-cd ../..
-echo Build completed!
-endlocal
-
-if errorlevel 1 (
-    echo.
-    echo MinGW compilation failed!
-    echo.
-    echo Make sure you have MinGW-w64 installed and in your PATH.
-    echo Download from: https://www.mingw-w64.org/downloads/
-    echo.
-    pause
-    exit /b 1
-)
-
 echo.
+REM ...existing code...
 echo Build completed successfully!
 echo Executable created: build\ChimixCheatEngine.exe
 echo To run: Use 'npm start' to launch the desktop app
