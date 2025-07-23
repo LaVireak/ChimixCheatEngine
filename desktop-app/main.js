@@ -896,29 +896,81 @@ function createMenu() {
 }
 
 function cleanup() {
-    // Stop engine process
+    // Forcefully kill engine process and its children (Windows)
     if (engineProcess && !engineProcess.killed) {
         try {
-            engineProcess.kill('SIGKILL');
+            if (process.platform === 'win32') {
+                const pid = engineProcess.pid;
+                if (pid) {
+                    const { exec } = require('child_process');
+                    exec(`taskkill /PID ${pid} /T /F`, (err, stdout, stderr) => {
+                        if (err) {
+                            console.error('taskkill error (engineProcess):', err);
+                        } else {
+                            console.log('taskkill output (engineProcess):', stdout);
+                        }
+                    });
+                }
+            } else {
+                engineProcess.kill('SIGTERM');
+                setTimeout(() => {
+                    if (engineProcess && !engineProcess.killed) {
+                        engineProcess.kill('SIGKILL');
+                    }
+                }, 2000);
+            }
         } catch (e) {
             console.error('Error killing engineProcess:', e);
         }
         engineProcess = null;
     }
 
-    // Stop any other child processes
-    if (currentProcess && !currentProcess.killed) {
+    // Forcefully kill currentProcess (Windows)
+    if (currentProcess && !currentProcess.killed && currentProcess.pid) {
         try {
-            currentProcess.kill('SIGKILL');
+            if (process.platform === 'win32') {
+                const { exec } = require('child_process');
+                exec(`taskkill /PID ${currentProcess.pid} /T /F`, (err, stdout, stderr) => {
+                    if (err) {
+                        console.error('taskkill error (currentProcess):', err);
+                    } else {
+                        console.log('taskkill output (currentProcess):', stdout);
+                    }
+                });
+            } else {
+                currentProcess.kill('SIGTERM');
+                setTimeout(() => {
+                    if (currentProcess && !currentProcess.killed) {
+                        currentProcess.kill('SIGKILL');
+                    }
+                }, 2000);
+            }
         } catch (e) {
             console.error('Error killing currentProcess:', e);
         }
         currentProcess = null;
     }
 
+    // Kill memoryEngine if present
     if (memoryEngine && typeof memoryEngine.kill === 'function' && !memoryEngine.killed) {
         try {
-            memoryEngine.kill('SIGKILL');
+            if (process.platform === 'win32' && memoryEngine.pid) {
+                const { exec } = require('child_process');
+                exec(`taskkill /PID ${memoryEngine.pid} /T /F`, (err, stdout, stderr) => {
+                    if (err) {
+                        console.error('taskkill error (memoryEngine):', err);
+                    } else {
+                        console.log('taskkill output (memoryEngine):', stdout);
+                    }
+                });
+            } else {
+                memoryEngine.kill('SIGTERM');
+                setTimeout(() => {
+                    if (memoryEngine && !memoryEngine.killed) {
+                        memoryEngine.kill('SIGKILL');
+                    }
+                }, 2000);
+            }
         } catch (e) {
             console.error('Error killing memoryEngine:', e);
         }
