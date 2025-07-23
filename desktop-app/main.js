@@ -179,7 +179,7 @@ if (isDev) {
 // App configuration
 const APP_CONFIG = {
     name: 'ChimixCheatEngine',
-    version: '1.0.12',
+    version: '1.0.13',
     width: 1200,
     height: 800,
     minWidth: 800,
