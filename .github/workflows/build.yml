@@ -62,7 +62,14 @@ jobs:
       - name: Rename C++ binary for Electron packaging
         shell: pwsh
         run: |
-          Rename-Item -Path "desktop-app/build/ChimixEngine.exe" -NewName "ChimixCheatEngine.exe" -Force
+          if (Test-Path "desktop-app/build/ChimixCheatEngine.exe") {
+              Remove-Item "desktop-app/build/ChimixCheatEngine.exe" -Force
+          }
+          if (Test-Path "desktop-app/build/ChimixEngine.exe") {
+              Rename-Item -Path "desktop-app/build/ChimixEngine.exe" -NewName "ChimixCheatEngine.exe" -Force
+          } else {
+              Write-Error "desktop-app/build/ChimixEngine.exe not found. Rename aborted."
+          }
 
       - name: Build Electron app
         env:
