@@ -31,15 +31,15 @@ if (Test-Path $distDir) {
 }
 
 if ($installerFiles.Count -eq 0 -and $distInstallers.Count -eq 0) {
-    # Fallback: move ChimixCheatEngine.exe as release binary
-    $exeFile = Join-Path $installerOutputDir 'ChimixCheatEngine.exe'
-    if (Test-Path $exeFile) {
-        $dest = Join-Path $releaseDir 'ChimixCheatEngine.exe'
-        Move-Item -Path $exeFile -Destination $dest -Force
-        Write-Host "No installer found. Moved ChimixCheatEngine.exe to release folder as main binary."
-        Write-Host "Automation complete. You may want to package this binary with an installer in the future."
+    # Always copy the latest ChimixCheatEngine-*-Setup.exe from dist to release
+    $latestSetup = Get-ChildItem -Path $distDir -Filter 'ChimixCheatEngine-*-Setup.exe' -File | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+    if ($null -ne $latestSetup) {
+        $dest = Join-Path $releaseDir $latestSetup.Name
+        Copy-Item -Path $latestSetup.FullName -Destination $dest -Force
+        Write-Host "Copied $($latestSetup.Name) from dist to release folder as latest setup installer."
+        Write-Host "Automation complete. Use the setup.exe in the release folder to install the app."
     } else {
-        Write-Error "No installer or main binary found in $installerOutputDir or dist."
+        Write-Error "No setup installer found in $distDir. Please check your build process."
         exit 1
     }
 } else {
